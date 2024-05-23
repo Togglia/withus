@@ -52,7 +52,33 @@ spec:
             memory: 50Mi
             cpu: 100m
   strategy:
+    type: RollingUpdate
     rollingUpdate:
       maxSurge: 25%
       maxUnavailable: 25%
-    type: RollingUpdate
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-intro-service
+spec:
+  type: NodePort
+  selector:
+    app: web-intro
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+---
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: hpa-web-intro
+spec:
+  maxReplicas: 10
+  minReplicas: 1
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: web-intro
+  targetCPUUtilizationPercentage: 50

@@ -6,7 +6,7 @@ metadata:
   labels:
     app: web-intro
 spec:
-  replicas: 30
+  replicas: 8
   selector:
     matchLabels:
       app: web-intro
@@ -25,7 +25,7 @@ spec:
                   app: web-intro
               topologyKey: kubernetes.io/hostname
       topologySpreadConstraints:
-      - maxSkew: 1
+      - maxSkew: 2
         topologyKey: topology.kubernetes.io/zone
         whenUnsatisfiable: DoNotSchedule
         labelSelector:
@@ -48,10 +48,10 @@ spec:
         resources:
           requests:
             memory: 50Mi
-            cpu: 200m
+            cpu: 100m
           limits:
             memory: 50Mi
-            cpu: 200m
+            cpu: 100m
   strategy:
     type: RollingUpdate
     rollingUpdate:

@@ -9,15 +9,15 @@ spec:
   selector:
     matchLabels:
       app: was-intro
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
   template:
     metadata:
       labels:
         app: was-intro
-  strategy:
-    rollingUpdate:
-      maxSurge: 25%
-      maxUnavailable: 25%
-    type: RollingUpdate
     spec:
       affinity:
         podAntiAffinity:
@@ -49,9 +49,9 @@ spec:
   selector:
     app: was-intro
   ports:
-    - protocol: TCP
-      port: 8080
-      targetPort: 8080
+  - protocol: TCP
+    port: 8080
+    targetPort: 8080
   type: ClusterIP
   clusterIP: 172.20.30.10
 ---

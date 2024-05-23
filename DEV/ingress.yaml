@@ -1,0 +1,40 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: trip-ingress
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: web-intro-service
+            port:
+              number: 80
+      - path: /intro/
+        pathType: Prefix
+        backend:
+          service:
+            name: web-home-service
+            port:
+              number: 80
+      - path: /login/
+        pathType: Prefix
+        backend:
+          service:
+            name: web-login-service
+            port:
+              number: 80        
+      - path: /join/
+        pathType: Prefix
+        backend:
+          service:
+            name: web-join-service
+            port:
+              number: 80

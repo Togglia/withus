@@ -5,7 +5,7 @@ metadata:
   labels:
     app: web-intro
 spec:
-  replicas: 1
+  replicas: 30
   selector:
     matchLabels:
       app: web-intro
@@ -47,10 +47,10 @@ spec:
         resources:
           requests:
             memory: 50Mi
-            cpu: 100m
+            cpu: 200m
           limits:
             memory: 50Mi
-            cpu: 100m
+            cpu: 200m
   strategy:
     type: RollingUpdate
     rollingUpdate:

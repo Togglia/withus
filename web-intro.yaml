@@ -13,11 +13,6 @@ spec:
     metadata:
       labels:
         app: web-intro
-  strategy:
-    rollingUpdate:
-      maxSurge: 25%
-      maxUnavailable: 25%
-    type: RollingUpdate
     spec:
       affinity:
         podAntiAffinity:
@@ -56,3 +51,8 @@ spec:
           limits:
             memory: 50Mi
             cpu: 100m
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate

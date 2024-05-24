@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: was-intro
-        image: 891377152236.dkr.ecr.ap-northeast-2.amazonaws.com/was-intro:v2.0
+        image: 891377152236.dkr.ecr.ap-northeast-2.amazonaws.com/was-intro:v1.0
         ports:
         - containerPort: 8080
         resources:

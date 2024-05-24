@@ -5,7 +5,7 @@ metadata:
   labels:
     app: web-intro
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: web-intro
@@ -80,7 +80,7 @@ metadata:
   name: hpa-web-intro
 spec:
   maxReplicas: 10
-  minReplicas: 1
+  minReplicas: 3
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment

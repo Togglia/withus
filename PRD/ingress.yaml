@@ -20,7 +20,7 @@ spec:
             name: web-intro-service
             port:
               number: 80
-      - path: /intro/
+      - path: /home/
         pathType: Prefix
         backend:
           service:

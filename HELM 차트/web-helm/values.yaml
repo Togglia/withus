@@ -1,15 +1,15 @@
 replicaCount: 1
 
 image:
-  repository: 891377152236.dkr.ecr.ap-northeast-2.amazonaws.com
+  repository: 891377152236.dkr.ecr.ap-northeast-2.amazonaws.com 
   pullPolicy: IfNotPresent
 
 resources:
   requests:
-    memory: 50Mi
+    memory: 200Mi
     cpu: 100m
   limits:
-    memory: 50Mi
+    memory: 200Mi
     cpu: 100m
 
 service:

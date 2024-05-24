@@ -56,11 +56,6 @@ spec:
           limits:
             memory: 50Mi
             cpu: 100m
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxSurge: 25%
-      maxUnavailable: 25%
 ---
 apiVersion: v1
 kind: Service

@@ -37,9 +37,18 @@ spec:
             app: was-intro
       containers:
       - name: was-intro
-        image: 891377152236.dkr.ecr.ap-northeast-2.amazonaws.com/was-intro:v2.0
+        image: 891377152236.dkr.ecr.ap-northeast-2.amazonaws.com/was-intro:v3.0
         ports:
         - containerPort: 8080
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8080
+        readinessProbe:
+          tcpSocket:
+            port: 8080
+          initialDelaySeconds: 15
+          periodSeconds: 10   
 ---
 apiVersion: v1
 kind: Service

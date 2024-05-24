@@ -81,4 +81,4 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: web-intro
-  targetCPUUtilizationPercentage: 80
+  targetCPUUtilizationPercentage: 50

@@ -8,6 +8,7 @@ metadata:
     alb.ingress.kubernetes.io/target-type: ip
 spec:
   rules:
+  - host: www.withus.site
   - http:
       paths:
       - path: /

@@ -1,0 +1,27 @@
+replicaCount: 3
+
+image:
+  repository: 891377152236.dkr.ecr.ap-northeast-2.amazonaws.com
+  pullPolicy: IfNotPresent
+
+hpa:
+  enabled: true
+  minReplicas: 3
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 50
+
+apps:
+  - name: was-intro
+    imageTag: v2.0
+  - name: was-join
+    imageTag: v2.0
+  - name: was-login
+    imageTag: v2.0
+  - name: was-home
+    imageTag: v2.0
+
+service:
+  - 172.20.30.10
+  - 172.20.30.30
+  - 172.20.30.40
+  - 172.20.30.20

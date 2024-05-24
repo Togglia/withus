@@ -32,7 +32,7 @@ spec:
             app: was-intro
       containers:
       - name: was-intro
-        image: 891377152236.dkr.ecr.ap-northeast-2.amazonaws.com/was-intro:v2.0
+        image: 891377152236.dkr.ecr.ap-northeast-2.amazonaws.com/was-intro:v2.1
         ports:
         - containerPort: 8080
         livenessProbe:

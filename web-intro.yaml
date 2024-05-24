@@ -1,3 +1,4 @@
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -5,7 +6,7 @@ metadata:
   labels:
     app: web-intro
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: web-intro
@@ -32,7 +33,7 @@ spec:
             app: web-intro
       containers:
       - name: web-intro
-        image: 891377152236.dkr.ecr.ap-northeast-2.amazonaws.com/web-intro:v1.1
+        image: 891377152236.dkr.ecr.ap-northeast-2.amazonaws.com/web-intro:v2.1
         ports:
         - containerPort: 80
         livenessProbe:

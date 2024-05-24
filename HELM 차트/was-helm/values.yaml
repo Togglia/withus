@@ -12,13 +12,13 @@ hpa:
 
 apps:
   - name: was-intro
-    imageTag: v2.0
+    imageTag: v3.0
   - name: was-join
-    imageTag: v2.0
+    imageTag: v3.0
   - name: was-login
-    imageTag: v2.0
+    imageTag: v3.0
   - name: was-home
-    imageTag: v2.0
+    imageTag: v3.0
 
 service:
   - 172.20.30.10

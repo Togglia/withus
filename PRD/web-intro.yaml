@@ -46,11 +46,11 @@ spec:
           periodSeconds: 10        
         resources:
           requests:
-            memory: 100Mi
-            cpu: 100m
+            memory: 200Mi
+            cpu: 200m
           limits:
-            memory: 100Mi
-            cpu: 100m
+            memory: 200Mi
+            cpu: 200m
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -81,4 +81,4 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: web-intro
-  targetCPUUtilizationPercentage: 50
+  targetCPUUtilizationPercentage: 10

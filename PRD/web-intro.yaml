@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: web-intro
-        image: 891377152236.dkr.ecr.ap-northeast-2.amazonaws.com/web-intro:v2.1
+        image: 891377152236.dkr.ecr.ap-northeast-2.amazonaws.com/web-intro:v1.1
         ports:
         - containerPort: 80  
         resources:

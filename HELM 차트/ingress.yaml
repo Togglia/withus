@@ -10,7 +10,7 @@ metadata:
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}]'
 spec:
   rules:
-  - host: www.withus.site
+  - host: dev.withus.site
   - http:
       paths:
       - path: /

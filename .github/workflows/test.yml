@@ -45,6 +45,7 @@ jobs:
         echo "::set-output name=version::$VERSION"
 
     - name: Build, tag, and push web/intro image
+      if: steps.get-version-web-intro.outputs.version
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         ECR_REPOSITORY: web-intro
@@ -60,6 +61,7 @@ jobs:
         echo "::set-output name=version::$VERSION"
 
     - name: Build, tag, and push web/home image
+      if: steps.get-version-web-home.outputs.version
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         ECR_REPOSITORY: web-home
@@ -75,6 +77,7 @@ jobs:
         echo "::set-output name=version::$VERSION"
 
     - name: Build, tag, and push web/login image
+      if: steps.get-version-web-login.outputs.version
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         ECR_REPOSITORY: web-login
@@ -90,6 +93,7 @@ jobs:
         echo "::set-output name=version::$VERSION"
 
     - name: Build, tag, and push web/join image
+      if: steps.get-version-web-join.outputs.version
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         ECR_REPOSITORY: web-join
@@ -105,6 +109,7 @@ jobs:
         echo "::set-output name=version::$VERSION"
 
     - name: Build, tag, and push was/intro image
+      if: steps.get-version-was-intro.outputs.version
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         ECR_REPOSITORY: was-intro
@@ -120,6 +125,7 @@ jobs:
         echo "::set-output name=version::$VERSION"
 
     - name: Build, tag, and push was/home image
+      if: steps.get-version-was-home.outputs.version
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         ECR_REPOSITORY: was-home
@@ -134,26 +140,4 @@ jobs:
         VERSION=$(cat Dockerfile/was/login/VERSION)
         echo "::set-output name=version::$VERSION"
 
-    - name: Build, tag, and push was/login image
-      env:
-        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        ECR_REPOSITORY: was-login
-        IMAGE_TAG: ${{ steps.get-version-was-login.outputs.version }}
-      run: |
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f Dockerfile/was/login/Dockerfile Dockerfile/was/login
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-
-    - name: Get version from was/join/VERSION file
-      id: get-version-was-join
-      run: |
-        VERSION=$(cat Dockerfile/was/join/VERSION)
-        echo "::set-output name=version::$VERSION"
-
-    - name: Build, tag, and push was/join image
-      env:
-        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        ECR_REPOSITORY: was-join
-        IMAGE_TAG: ${{ steps.get-version-was-join.outputs.version }}
-      run: |
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f Dockerfile/was/join/Dockerfile Dockerfile/was/join
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+    - name: Build, tag

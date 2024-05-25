@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - '**/VERSION'  # VERSION 파일이 포함된 경로에서 푸시될 때 실행
+      - '**/VERSION'  
 
 jobs:
   deploy:
@@ -42,23 +42,23 @@ jobs:
     - name: Get version from VERSION file
       id: get-version
       if: steps.version-changed.outputs.changed == 'true'
-      run: |
-        VERSION=$(cat Dockerfile/${{ matrix.repo_name }}/VERSION)
-        echo "::set-output name=version::$VERSION"
+        run: |
+          VERSION=$(cat Dockerfile/${{ matrix.repo_name }}/VERSION)
+          echo "::set-output name=version::$VERSION"
 
     - name: Login to Amazon ECR
       id: login-ecr
       if: steps.version-changed.outputs.changed == 'true'
-      uses: aws-actions/amazon-ecr-login@v1
+        uses: aws-actions/amazon-ecr-login@v1
 
     - name: Build, tag, and push image to Amazon ECR
       id: build-image
       if: steps.version-changed.outputs.changed == 'true'
-      env:
-        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        ECR_REPOSITORY: ${{ matrix.repo_name }}
-        IMAGE_TAG: ${{ steps.get-version.outputs.version }}
-      run: |
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f Dockerfile/${{ matrix.repo_name }}/Dockerfile Dockerfile/${{ matrix.repo_name }}
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-        echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: ${{ matrix.repo_name }}
+          IMAGE_TAG: ${{ steps.get-version.outputs.version }}
+        run: |
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f Dockerfile/${{ matrix.repo_name }}/Dockerfile Dockerfile/${{ matrix.repo_name }}
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"

@@ -35,7 +35,7 @@ jobs:
     - name: Get version from VERSION file
       id: get-version
       run: |
-        VERSION=$(cat Dockerfile/web/intro/VERSION)
+        VERSION=$(cat Dockerfile/was/intro/VERSION)
         echo "::set-output name=version::$VERSION"
 
     - name: Build, tag, and push image to Amazon ECR

@@ -54,10 +54,6 @@ jobs:
             exit 0
           fi
 
-      - name: Check if version changed
-        id: version-check
-        if: steps.compare-versions.outputs.changed == 'success'  
-        run: exit 1  
 
       - name: Build, tag, and push image to Amazon ECR
         id: build-image

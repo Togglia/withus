@@ -38,8 +38,19 @@ jobs:
         VERSION=$(cat Dockerfile/${{ matrix.repo_name }}/VERSION)
         echo "::set-output name=version::$VERSION"
 
+    - name: Check if image exists in ECR
+      id: check-image
+      run: |
+        TAG_EXISTS=$(aws ecr describe-images --repository-name ${{ matrix.repo_name }} --image-ids imageTag=${{ steps.get-version.outputs.version }} --query 'imageDetails[*]' --output text)
+        if [ -z "$TAG_EXISTS" ]; then
+          echo "Image does not exist in ECR."
+          exit 1
+        else
+          echo "Image already exists in ECR."
+        fi
+
     - name: Build, tag, and push image to Amazon ECR
-      id: build-image
+      if: ${{ steps.check-image.run.result == 'Image does not exist in ECR.' }}
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         ECR_REPOSITORY: ${{ matrix.repo_name }}

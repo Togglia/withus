@@ -1,3 +1,4 @@
+#제발
 name: Dockerizing to Amazon ECR
 
 on:
@@ -46,7 +47,8 @@ jobs:
         id: compare-versions
         run: |
           if [ "${{ steps.get-current-version.outputs.version }}" != "${{ steps.get-version.outputs.version }}" ]; then
-            echo "success"
+            echo "Versions are different. Proceeding with deployment"
+            exit 1
           else
             echo "Versions are the same. Skipping deployment."
             exit 0
@@ -54,12 +56,12 @@ jobs:
 
       - name: Check if version changed
         id: version-check
-        if: steps.compare-versions.result == 'success'  # 버전이 변경된 경우에만 실행
-        run: exit 1  # Bash에서 1은 계속하기를 나타냄
+        if: steps.compare-versions.result == 'success'  
+        run: exit 1  
 
       - name: Build, tag, and push image to Amazon ECR
         id: build-image
-        if: steps.compare-versions.result == 'success'  # 버전이 변경된 경우에만 실행
+        if: steps.compare-versions.result == 'success'  
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: ${{ matrix.repo_name }}

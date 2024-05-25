@@ -5,10 +5,7 @@ on:
     branches:
       - main
     paths:
-      - 'Dockerfile/**/VERSION'
-
-env:
-  AWS_REGION: ap-northeast-2
+      - '**/VERSION'
 
 jobs:
   deploy:
@@ -16,6 +13,18 @@ jobs:
     runs-on: ubuntu-latest
     environment: production
 
+    strategy:
+      matrix:
+        dockerfile-path:
+          - 'Dockerfile/web/intro/VERSION'
+          - 'Dockerfile/web/home/VERSION'
+          - 'Dockerfile/web/login/VERSION'
+          - 'Dockerfile/web/join/VERSION'
+          - 'Dockerfile/was/intro/VERSION'
+          - 'Dockerfile/was/home/VERSION'
+          - 'Dockerfile/was/login/VERSION'
+          - 'Dockerfile/was/join/VERSION'
+    
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -25,31 +34,25 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
+          aws-region: ap-northeast-2 # or use ${{ env.AWS_REGION }}
 
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Get repository name from path
-        id: get-repository-name
-        run: |
-          WORKFLOW=$(echo "${{ github.event_path }}" | awk -F/ '{print $2}')
-          echo "::set-output name=repository::$WORKFLOW"
-
       - name: Get version from VERSION file
         id: get-version
         run: |
-          VERSION=$(cat Dockerfile/${{ steps.get-repository-name.outputs.repository }}/VERSION)
+          VERSION=$(cat ${{ matrix.dockerfile-path }})
           echo "::set-output name=version::$VERSION"
 
       - name: Build, tag, and push image to Amazon ECR
         id: build-image
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: ${{ matrix.dockerfile-path | split("/") | last | split(".")[0] }} 
           IMAGE_TAG: ${{ steps.get-version.outputs.version }}
         run: |
-          ECR_REPOSITORY="${{ steps.get-repository-name.outputs.repository }}"
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f Dockerfile/${ECR_REPOSITORY}/Dockerfile Dockerfile/${ECR_REPOSITORY}
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f ${{ matrix.dockerfile-path }}/Dockerfile ${{ matrix.dockerfile-path | dirname }}
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"

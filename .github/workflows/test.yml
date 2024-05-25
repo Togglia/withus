@@ -1,4 +1,4 @@
-#web-join GitAction
+#was-home GitAction
 name: Dockerizing to Amazon ECR
 
 on:
@@ -6,11 +6,11 @@ on:
     branches:
       - main
     paths:
-      - 'Dockerfile/web/join/VERSION'
+      - 'Dockerfile/was/home/VERSION'
 
 env:
   AWS_REGION: ap-northeast-2        
-  ECR_REPOSITORY: web-join            
+  ECR_REPOSITORY: was-home            
 
 jobs:
   deploy:
@@ -36,7 +36,7 @@ jobs:
     - name: Get version from VERSION file
       id: get-version
       run: |
-        VERSION=$(cat Dockerfile/web/join/VERSION)
+        VERSION=$(cat Dockerfile/was/home/VERSION)
         echo "::set-output name=version::$VERSION"
 
     - name: Build, tag, and push image to Amazon ECR
@@ -45,6 +45,6 @@ jobs:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         IMAGE_TAG: ${{ steps.get-version.outputs.version }}
       run: |
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f Dockerfile/web/join/Dockerfile Dockerfile/web/join
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f Dockerfile/was/home/Dockerfile Dockerfile/was/home
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"

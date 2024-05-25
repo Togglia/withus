@@ -1,4 +1,3 @@
-FROM openjdk:8-jdk-alpine
 ENV JAVA_HOME /usr/lib/jvm/java-1.8-openjdk
 ENV CATALINA_HOME /usr/local/tomcat9.0
 ENV TOMCAT_VERSION 9.0.89

@@ -5,14 +5,14 @@ on:
     branches:
       - main
     paths:
-      - 'Dockerfile/web/intro/VERSION'
-      - 'Dockerfile/web/join/VERSION'
-      - 'Dockerfile/web/login/VERSION'
-      - 'Dockerfile/web/home/VERSION'
-      - 'Dockerfile/was/intro/VERSION'
-      - 'Dockerfile/was/join/VERSION'
-      - 'Dockerfile/was/login/VERSION'
-      - 'Dockerfile/was/home/VERSION'
+      - 'Dockerfile/web-intro/VERSION'
+      - 'Dockerfile/web-join/VERSION'
+      - 'Dockerfile/web-login/VERSION'
+      - 'Dockerfile/web-home/VERSION'
+      - 'Dockerfile/was-intro/VERSION'
+      - 'Dockerfile/was-join/VERSION'
+      - 'Dockerfile/was-login/VERSION'
+      - 'Dockerfile/was-home/VERSION'
 
 jobs:
   deploy:

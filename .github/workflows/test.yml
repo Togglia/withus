@@ -31,23 +31,28 @@ jobs:
     - name: Check if VERSION has changed
       id: check-version
       run: |
-        git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep 'VERSION' || exit 78
+        if [[ "${{ github.event_name }}" == "push" && "${{ github.event.changes }}" =~ "VERSION" ]]; then
+          echo "VERSION file has changed."
+        else
+          echo "VERSION file has not changed. Skipping the deployment."
+          exit 78
+        fi
 
     - name: Login to Amazon ECR
       id: login-ecr
-      if: steps.check-version.run == '' # Only login if VERSION has changed
+      if: steps.check-version.run == 'VERSION file has changed.'
       uses: aws-actions/amazon-ecr-login@v1
 
     - name: Get version from VERSION file
       id: get-version
-      if: steps.check-version.run == '' # Only proceed if VERSION has changed
+      if: steps.check-version.run == 'VERSION file has changed.'
       run: |
         VERSION=$(cat Dockerfile/${{ matrix.repo_name }}/VERSION)
         echo "::set-output name=version::$VERSION"
 
     - name: Build, tag, and push image to Amazon ECR
       id: build-image
-      if: steps.check-version.run == '' # Only proceed if VERSION has changed
+      if: steps.check-version.run == 'VERSION file has changed.'
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         ECR_REPOSITORY: ${{ matrix.repo_name }}

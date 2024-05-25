@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - '**/VERSION' 
+      - '**/VERSION' # 모든 디렉토리의 VERSION 파일을 감지합니다.
 
 jobs:
   deploy:
@@ -21,33 +21,38 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
-    - name: Check affected directory
+    - name: Determine changed directory
+      id: changed-dir
       run: |
-                changed_dir=$(echo "${{ github.event_path }}" | grep -o 'Dockerfile/\([^/]\+\)/VERSION' | cut -d '/' -f 2)
-        echo "Changed directory: $changed_dir"
-                if [ "$changed_dir" != "${{ matrix.repo_name }}" ]; then
-          echo "Skipping job for ${{ matrix.repo_name }} as it was not affected."
-          exit 0
-        fi
+        echo "Changed directory: $(dirname $(find . -name VERSION -exec git diff --name-only HEAD^ HEAD -- {} + | head -n 1))"
+        echo "changed_dir=$(dirname $(find . -name VERSION -exec git diff --name-only HEAD^ HEAD -- {} + | head -n 1))" >> $GITHUB_ENV
+
+    - name: Skip if not changed
+      if: ${{ env.changed_dir != 'Dockerfile/' + matrix.repo_name }}
+      run: echo "Directory ${{ matrix.repo_name }} not changed, skipping..."
 
     - name: Configure AWS credentials
+      if: ${{ env.changed_dir == 'Dockerfile/' + matrix.repo_name }}
       uses: aws-actions/configure-aws-credentials@v1
       with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}          
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ap-northeast-2
 
     - name: Login to Amazon ECR
+      if: ${{ env.changed_dir == 'Dockerfile/' + matrix.repo_name }}
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v1
 
     - name: Get version from VERSION file
+      if: ${{ env.changed_dir == 'Dockerfile/' + matrix.repo_name }}
       id: get-version
       run: |
         VERSION=$(cat Dockerfile/${{ matrix.repo_name }}/VERSION)
         echo "::set-output name=version::$VERSION"
 
     - name: Build, tag, and push image to Amazon ECR
+      if: ${{ env.changed_dir == 'Dockerfile/' + matrix.repo_name }}
       id: build-image
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}

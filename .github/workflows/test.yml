@@ -5,54 +5,83 @@ on:
     branches:
       - main
     paths:
-      - '**/VERSION'
+      - 'Dockerfile/web/intro/VERSION'
+      - 'Dockerfile/web/home/VERSION'
+
+env:
+  AWS_REGION: ap-northeast-2
 
 jobs:
-  deploy:
-    name: Deploy
+  deploy_intro:
+    name: Deploy Intro
     runs-on: ubuntu-latest
     environment: production
 
-    strategy:
-      matrix:
-        repo_name: [web-intro, web-home]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr-intro
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Get version from Intro VERSION file
+        id: get-version-intro
+        run: |
+          VERSION=$(cat Dockerfile/web/intro/VERSION)
+          echo "::set-output name=version::$VERSION"
+
+      - name: Build, tag, and push Intro image to Amazon ECR
+        id: build-image-intro
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr-intro.outputs.registry }}
+          ECR_REPOSITORY: web-intro
+          IMAGE_TAG: ${{ steps.get-version-intro.outputs.version }}
+        run: |
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f Dockerfile/web/intro/Dockerfile Dockerfile/web/intro
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+
+  deploy_home:
+    name: Deploy Home
+    runs-on: ubuntu-latest
+    environment: production
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v2
 
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}          
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ap-northeast-2
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
 
-    - name: Determine changed repository
-      id: determine-repo
-      run: |
-        CHANGED_REPO=$(git diff --name-only HEAD^ HEAD | grep 'VERSION' | cut -d'/' -f2 | cut -d'/' -f1 | uniq)
-        echo "::set-output name=changed_repo::$CHANGED_REPO"
+      - name: Login to Amazon ECR
+        id: login-ecr-home
+        uses: aws-actions/amazon-ecr-login@v1
 
-    - name: Check if repository changed
-      id: check-repo
-      run: echo "::set-output name=changed::${{ steps.determine-repo.outputs.changed_repo == matrix.repo_name }}"
+      - name: Get version from Home VERSION file
+        id: get-version-home
+        run: |
+          VERSION=$(cat Dockerfile/web/home/VERSION)
+          echo "::set-output name=version::$VERSION"
 
-    - name: Get version from VERSION file
-      id: get-version
-      if: steps.check-repo.outputs.changed
-      run: |
-        VERSION=$(cat Dockerfile/${{ matrix.repo_name }}/VERSION)
-        echo "::set-output name=version::$VERSION"
-
-    - name: Build, tag, and push image to Amazon ECR
-      id: build-image
-      if: steps.check-repo.outputs.changed
-      env:
-        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        ECR_REPOSITORY: ${{ matrix.repo_name }}
-        IMAGE_TAG: ${{ steps.get-version.outputs.version }}
-      run: |
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f Dockerfile/${{ matrix.repo_name }}/Dockerfile Dockerfile/${{ matrix.repo_name }}
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-        echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+      - name: Build, tag, and push Home image to Amazon ECR
+        id: build-image-home
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr-home.outputs.registry }}
+          ECR_REPOSITORY: web-home
+          IMAGE_TAG: ${{ steps.get-version-home.outputs.version }}
+        run: |
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f Dockerfile/web/home/Dockerfile Dockerfile/web/home
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"

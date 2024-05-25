@@ -38,6 +38,7 @@ jobs:
           echo "VERSION file not changed"
           echo "::set-output name=changed::false"
         fi
+      
 
     - name: Get version from VERSION file
       id: get-version

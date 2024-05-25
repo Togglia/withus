@@ -1,4 +1,4 @@
-name:Dockerizing to Amazon ECR
+name: Dockerizing to Amazon ECR
 
 on:
   push:       

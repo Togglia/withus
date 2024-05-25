@@ -46,7 +46,7 @@ jobs:
         id: compare-versions
         run: |
           if [ "${{ steps.get-current-version.outputs.version }}" != "${{ steps.get-version.outputs.version }}" ]; then
-            echo "Versions are different. Proceeding with deployment."
+            echo "success"
           else
             echo "Versions are the same. Skipping deployment."
             exit 0

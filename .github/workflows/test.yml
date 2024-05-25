@@ -46,13 +46,19 @@ jobs:
           VERSION=$(cat ${{ matrix.dockerfile-path }})
           echo "::set-output name=version::$VERSION"
 
+      - name: Extract repository name
+        id: extract-repo-name
+        run: |
+          REPO_NAME=$(basename "$(dirname "${{ matrix.dockerfile-path }}")")
+          echo "::set-output name=reponame::$REPO_NAME"
+
       - name: Build, tag, and push image to Amazon ECR
         id: build-image
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: ${{ matrix.dockerfile-path | split("/") | last | split(".")[0] }} 
+          ECR_REPOSITORY: ${{ steps.extract-repo-name.outputs.reponame }}
           IMAGE_TAG: ${{ steps.get-version.outputs.version }}
         run: |
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f ${{ matrix.dockerfile-path }}/Dockerfile ${{ matrix.dockerfile-path | dirname }}
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f ${{ matrix.dockerfile-path }}/Dockerfile $(dirname "${{ matrix.dockerfile-path }}")
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"

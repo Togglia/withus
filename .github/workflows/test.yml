@@ -31,7 +31,7 @@ jobs:
     - name: Check if VERSION has changed
       id: check-version
       run: |
-        if [[ "${{ github.event_name }}" == "push" && "${{ github.event.changes }}" =~ "VERSION" ]]; then
+        if [[ $(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep 'VERSION') ]]; then
           echo "VERSION file has changed."
         else
           echo "VERSION file has not changed. Skipping the deployment."

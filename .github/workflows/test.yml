@@ -28,18 +28,26 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ap-northeast-2
 
-    - name: Login to Amazon ECR
-      id: login-ecr
-      uses: aws-actions/amazon-ecr-login@v1
+    - name: Determine changed repository
+      id: determine-repo
+      run: |
+        CHANGED_REPO=$(git diff --name-only HEAD^ HEAD | grep 'VERSION' | cut -d'/' -f2 | cut -d'/' -f1 | uniq)
+        echo "::set-output name=changed_repo::$CHANGED_REPO"
+
+    - name: Check if repository changed
+      id: check-repo
+      run: echo "::set-output name=changed::${{ steps.determine-repo.outputs.changed_repo == matrix.repo_name }}"
 
     - name: Get version from VERSION file
       id: get-version
+      if: steps.check-repo.outputs.changed
       run: |
         VERSION=$(cat Dockerfile/${{ matrix.repo_name }}/VERSION)
         echo "::set-output name=version::$VERSION"
 
     - name: Build, tag, and push image to Amazon ECR
       id: build-image
+      if: steps.check-repo.outputs.changed
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         ECR_REPOSITORY: ${{ matrix.repo_name }}

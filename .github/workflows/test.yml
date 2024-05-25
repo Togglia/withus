@@ -1,22 +1,28 @@
-#was-home GitAction
 name: Dockerizing to Amazon ECR
 
 on:
-  push:       
+  push:
     branches:
       - main
     paths:
-      - 'Dockerfile/was/home/VERSION'
+      - 'Dockerfile/**/VERSION'
 
 env:
-  AWS_REGION: ap-northeast-2        
-  ECR_REPOSITORY: was-home            
+  AWS_REGION: ap-northeast-2
 
 jobs:
   deploy:
     name: Deploy
     runs-on: ubuntu-latest
     environment: production
+
+    strategy:
+      matrix:
+        app_type:
+          - web-login
+          - web-join
+          - was-intro
+          - was-home
 
     steps:
     - name: Checkout
@@ -25,7 +31,7 @@ jobs:
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}          
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ env.AWS_REGION }}
 
@@ -36,15 +42,18 @@ jobs:
     - name: Get version from VERSION file
       id: get-version
       run: |
-        VERSION=$(cat Dockerfile/was/home/VERSION)
+        VERSION=$(cat Dockerfile/$APP_TYPE/VERSION)
         echo "::set-output name=version::$VERSION"
+      env:
+        APP_TYPE: ${{ matrix.app_type }}
 
     - name: Build, tag, and push image to Amazon ECR
       id: build-image
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        ECR_REPOSITORY: ${{ matrix.app_type }}
         IMAGE_TAG: ${{ steps.get-version.outputs.version }}
       run: |
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f Dockerfile/was/home/Dockerfile Dockerfile/was/home
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f Dockerfile/$ECR_REPOSITORY/Dockerfile Dockerfile/$ECR_REPOSITORY
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"

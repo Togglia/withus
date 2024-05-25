@@ -11,11 +11,9 @@ jobs:
   deploy:
     name: Deploy
     runs-on: ubuntu-latest
-    environment: production
 
     env:
       AWS_REGION: ap-northeast-2
-      ECR_REGISTRY: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com
 
     steps:
     - name: Checkout
@@ -54,8 +52,6 @@ jobs:
             version=$(cat $directory/VERSION)
             dockerfile="$directory/Dockerfile"
             
-            repository=$(cat $directory/ecr_repository)
-            
-            docker buildx build -t $ECR_REGISTRY/$repository:$image_name-$version -f $dockerfile $directory --push
+            docker buildx build -t $ECR_REGISTRY/$image_name:$version -f $dockerfile $directory --push
           fi
         done

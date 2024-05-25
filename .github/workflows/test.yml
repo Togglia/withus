@@ -40,13 +40,11 @@ jobs:
 
     - name: Get version from web/intro/VERSION file
       id: get-version-web-intro
-      if: ${{ github.event.head_commit.message != 'skip' && github.event.commits.*.added && contains(github.event.commits.*.added, 'Dockerfile/web/intro/VERSION') || github.event.commits.*.modified && contains(github.event.commits.*.modified, 'Dockerfile/web/intro/VERSION') }}
       run: |
         VERSION=$(cat Dockerfile/web/intro/VERSION)
         echo "::set-output name=version::$VERSION"
 
     - name: Build, tag, and push web/intro image
-      if: steps.get-version-web-intro.outputs.version
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         ECR_REPOSITORY: web-intro
@@ -57,7 +55,6 @@ jobs:
 
     - name: Get version from web/home/VERSION file
       id: get-version-web-home
-      if: ${{ github.event.head_commit.message != 'skip' && github.event.commits.*.added && contains(github.event.commits.*.added, 'Dockerfile/web/home/VERSION') || github.event.commits.*.modified && contains(github.event.commits.*.modified, 'Dockerfile/web/home/VERSION') }}
       run: |
         VERSION=$(cat Dockerfile/web/home/VERSION)
         echo "::set-output name=version::$VERSION"
@@ -74,7 +71,6 @@ jobs:
 
     - name: Get version from web/login/VERSION file
       id: get-version-web-login
-      if: ${{ github.event.head_commit.message != 'skip' && github.event.commits.*.added && contains(github.event.commits.*.added, 'Dockerfile/web/login/VERSION') || github.event.commits.*.modified && contains(github.event.commits.*.modified, 'Dockerfile/web/login/VERSION') }}
       run: |
         VERSION=$(cat Dockerfile/web/login/VERSION)
         echo "::set-output name=version::$VERSION"
@@ -91,7 +87,6 @@ jobs:
 
     - name: Get version from web/join/VERSION file
       id: get-version-web-join
-      if: ${{ github.event.head_commit.message != 'skip' && github.event.commits.*.added && contains(github.event.commits.*.added, 'Dockerfile/web/join/VERSION') || github.event.commits.*.modified && contains(github.event.commits.*.modified, 'Dockerfile/web/join/VERSION') }}
       run: |
         VERSION=$(cat Dockerfile/web/join/VERSION)
         echo "::set-output name=version::$VERSION"
@@ -108,7 +103,6 @@ jobs:
 
     - name: Get version from was/intro/VERSION file
       id: get-version-was-intro
-      if: ${{ github.event.head_commit.message != 'skip' && github.event.commits.*.added && contains(github.event.commits.*.added, 'Dockerfile/was/intro/VERSION') || github.event.commits.*.modified && contains(github.event.commits.*.modified, 'Dockerfile/was/intro/VERSION') }}
       run: |
         VERSION=$(cat Dockerfile/was/intro/VERSION)
         echo "::set-output name=version::$VERSION"
@@ -125,7 +119,6 @@ jobs:
 
     - name: Get version from was/home/VERSION file
       id: get-version-was-home
-      if: ${{ github.event.head_commit.message != 'skip' && github.event.commits.*.added && contains(github.event.commits.*.added, 'Dockerfile/was/home/VERSION') || github.event.commits.*.modified && contains(github.event.commits.*.modified, 'Dockerfile/was/home/VERSION') }}
       run: |
         VERSION=$(cat Dockerfile/was/home/VERSION)
         echo "::set-output name=version::$VERSION"
@@ -142,7 +135,6 @@ jobs:
 
     - name: Get version from was/login/VERSION file
       id: get-version-was-login
-      if: ${{ github.event.head_commit.message != 'skip' && github.event.commits.*.added && contains(github.event.commits.*.added, 'Dockerfile/was/login/VERSION') || github.event.commits.*.modified && contains(github.event.commits.*.modified, 'Dockerfile/was/login/VERSION') }}
       run: |
         VERSION=$(cat Dockerfile/was/login/VERSION)
         echo "::set-output name=version::$VERSION"
@@ -159,7 +151,6 @@ jobs:
 
     - name: Get version from was/join/VERSION file
       id: get-version-was-join
-      if: ${{ github.event.head_commit.message != 'skip' && github.event.commits.*.added && contains(github.event.commits.*.added, 'Dockerfile/was/join/VERSION') || github.event.commits.*.modified && contains(github.event.commits.*.modified, 'Dockerfile/was/join/VERSION') }}
       run: |
         VERSION=$(cat Dockerfile/was/join/VERSION)
         echo "::set-output name=version::$VERSION"

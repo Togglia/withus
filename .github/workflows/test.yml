@@ -1,15 +1,23 @@
 name: Dockerizing to Amazon ECR
 
 on:
-  push:       
+  push:
     branches:
       - main
     paths:
-      - 'Dockerfile/web/intro/VERSION'
+      - '**/VERSION'
 
 env:
-  AWS_REGION: ap-northeast-2        
-  ECR_REPOSITORY: web-intro            
+  AWS_REGION: ap-northeast-2
+  ECR_REPOSITORIES: |
+    web-intro
+    web-home
+    web-login
+    web-join
+    was-intro
+    was-home
+    was-login
+    was-join
 
 jobs:
   deploy:
@@ -18,32 +26,28 @@ jobs:
     environment: production
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v2
 
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}          
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ${{ env.AWS_REGION }}
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
 
-    - name: Login to Amazon ECR
-      id: login-ecr
-      uses: aws-actions/amazon-ecr-login@v1
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
 
-    - name: Get version from VERSION file
-      id: get-version
-      run: |
-        VERSION=$(cat Dockerfile/web/intro/VERSION)
-        echo "::set-output name=version::$VERSION"
-
-    - name: Build, tag, and push image to Amazon ECR
-      id: build-image
-      env:
-        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        IMAGE_TAG: ${{ steps.get-version.outputs.version }}
-      run: |
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f Dockerfile/web/intro/Dockerfile Dockerfile/web/intro
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-        echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+      - name: Build, tag, and push image to Amazon ECR
+        id: build-images
+        run: |
+          for REPO in $ECR_REPOSITORIES; do
+            DOCKERFILE_PATH="Dockerfile/${REPO}/$(basename $REPO)"
+            VERSION_PATH="${DOCKERFILE_PATH}/VERSION"
+            VERSION=$(cat $VERSION_PATH)
+            docker build -t ${{ steps.login-ecr.outputs.registry }}/${REPO}:${VERSION} -f ${DOCKERFILE_PATH}/Dockerfile ${DOCKERFILE_PATH}
+            docker push ${{ steps.login-ecr.outputs.registry }}/${REPO}:${VERSION}
+            echo "::set-output name=image-${REPO}::${{ steps.login-ecr.outputs.registry }}/${REPO}:${VERSION}"
+          done

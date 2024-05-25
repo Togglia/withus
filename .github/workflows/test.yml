@@ -15,7 +15,7 @@ jobs:
 
     strategy:
       matrix:
-        repo_name: [web-intro, web-home]
+        repo_name: [web-intro, web-home, web-login, web-join, was-intro, was-home, was-login, was-join]
 
     steps:
       - name: Checkout
@@ -47,7 +47,7 @@ jobs:
         run: |
           if [ "${{ steps.get-current-version.outputs.version }}" = "${{ steps.get-version.outputs.version }}" ]; then
             echo "Versions are the same. Skipping deployment."
-            exit 1
+            exit 0
           fi
 
       - name: Build, tag, and push image to Amazon ECR

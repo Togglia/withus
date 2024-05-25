@@ -33,7 +33,7 @@ jobs:
 
       - name: Build and push Docker images
         run: |
-          for path in $(find Dockerfile -type f -name "*.VERSION" -exec dirname {} \; | sort -u); do
+          for path in $(find Dockerfile -type f -name "VERSION" -exec dirname {} \; | sort -u); do
             SERVICE_NAME=$(basename $path)
             VERSION=$(cat $path/VERSION)
             ECR_REPOSITORY="${SERVICE_NAME//-/_}"

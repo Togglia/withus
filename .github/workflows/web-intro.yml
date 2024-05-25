@@ -1,7 +1,7 @@
 name: Dockerizing to Amazon ECR
 
 on:
-  push:
+  push:       
     branches:
       - main
 
@@ -30,39 +30,17 @@ jobs:
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v1
 
-    - name: Read current version
+    - name: Get version from VERSION file
       id: get-version
       run: |
-        VERSION=$(cat VERSION)
-        echo "Current version: $VERSION"
-        echo "::set-output name=current-version::$VERSION"
-
-    - name: Increment version
-      id: increment-version
-      run: |
-        VERSION=${{ steps.get-version.outputs.current-version }}
-        IFS='.' read -r -a version_parts <<< "$VERSION"
-        MAJOR=${version_parts[0]}
-        MINOR=${version_parts[1]}
-        PATCH=${version_parts[2]}
-        NEW_VERSION="$MAJOR.$MINOR.$((PATCH + 1))"
-        echo "New version: $NEW_VERSION"
-        echo $NEW_VERSION > VERSION
-        echo "::set-output name=new-version::$NEW_VERSION"
-
-    - name: Commit new version
-      run: |
-        git config --global user.name 'github-actions[bot]'
-        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-        git add VERSION
-        git commit -m "Increment version to ${{ steps.increment-version.outputs.new-version }}"
-        git push
+        VERSION=$(cat Dockerfile/web/intro/VERSION)
+        echo "::set-output name=version::$VERSION"
 
     - name: Build, tag, and push image to Amazon ECR
       id: build-image
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        IMAGE_TAG: ${{ steps.increment-version.outputs.new-version }}
+        IMAGE_TAG: ${{ steps.get-version.outputs.version }}
       run: |
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f Dockerfile/web/intro/Dockerfile Dockerfile/web/intro
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG

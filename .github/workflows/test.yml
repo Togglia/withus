@@ -1,4 +1,3 @@
-#web GitAction
 name: Dockerizing to Amazon ECR
 
 on:
@@ -6,10 +5,11 @@ on:
     branches:
       - main
     paths:
-      - 'Dockerfile/**/VERSION'
+      - 'Dockerfile/web/intro/VERSION'
 
 env:
   AWS_REGION: ap-northeast-2        
+  ECR_REPOSITORY: web-intro            
 
 jobs:
   deploy:
@@ -32,18 +32,18 @@ jobs:
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v1
 
-    - name: List Dockerfiles
-      id: list-dockerfiles
+    - name: Get version from VERSION file
+      id: get-version
       run: |
-        echo "::set-output name=dockerfiles::$(find Dockerfile -type f -name 'Dockerfile' -exec dirname {} \; | sort -u)"
+        VERSION=$(cat Dockerfile/web/intro/VERSION)
+        echo "::set-output name=version::$VERSION"
 
-    - name: Build and push images
+    - name: Build, tag, and push image to Amazon ECR
+      id: build-image
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        IMAGE_TAG: ${{ steps.get-version.outputs.version }}
       run: |
-        for dockerfile in ${{ steps.list-dockerfiles.outputs.dockerfiles }}; do
-          SERVICE_NAME=$(basename $(dirname $dockerfile))
-          VERSION=$(cat $dockerfile/VERSION)
-          IMAGE_TAG=$SERVICE_NAME:$VERSION
-          
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY/$IMAGE_TAG -f $dockerfile/Dockerfile $dockerfile
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY/$IMAGE_TAG
-        done
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f Dockerfile/web/intro/Dockerfile Dockerfile/web/intro
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"

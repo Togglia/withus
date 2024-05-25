@@ -45,15 +45,12 @@ jobs:
       - name: Compare versions
         id: compare-versions
         run: |
-          if [ "${{ steps.get-current-version.outputs.version }}" = "${{ steps.get-version.outputs.version }}" ]; then
+          if [ "${{ steps.get-current-version.outputs.version }}" != "${{ steps.get-version.outputs.version }}" ]; then
+            echo "Versions are different. Proceeding with deployment."
+          else
             echo "Versions are the same. Skipping deployment."
             exit 0
           fi
-
-      - name: Check if version changed
-        id: version-check
-        if: steps.compare-versions.result == 'success'  # 버전이 변경되지 않았을 때만 실행
-        run: exit 78  # Bash에서 78은 건너뛰기를 나타냄
 
       - name: Build, tag, and push image to Amazon ECR
         id: build-image

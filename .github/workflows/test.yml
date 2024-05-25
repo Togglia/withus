@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - '**/VERSION'
+      - '**/VERSION' 
 
 jobs:
   deploy:
@@ -20,6 +20,15 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2
+
+    - name: Check affected directory
+      run: |
+                changed_dir=$(echo "${{ github.event_path }}" | grep -o 'Dockerfile/\([^/]\+\)/VERSION' | cut -d '/' -f 2)
+        echo "Changed directory: $changed_dir"
+                if [ "$changed_dir" != "${{ matrix.repo_name }}" ]; then
+          echo "Skipping job for ${{ matrix.repo_name }} as it was not affected."
+          exit 0
+        fi
 
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1

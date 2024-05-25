@@ -49,7 +49,7 @@ jobs:
       if: steps.get-version-web-intro.outputs.version
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        ECR_REPOSITORY: web-intro
+        ECR_REPOSITORY: ㅅ갸ㅔ
         IMAGE_TAG: ${{ steps.get-version-web-intro.outputs.version }}
       run: |
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f Dockerfile/web/intro/Dockerfile Dockerfile/web/intro

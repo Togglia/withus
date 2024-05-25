@@ -1,28 +1,25 @@
+#web GitAction
 name: Dockerizing to Amazon ECR
 
 on:
-  push:
+  push:       
     branches:
       - main
     paths:
-      - '**/VERSION'
+      - 'Dockerfile/**/VERSION'
+
+env:
+  AWS_REGION: ap-northeast-2        
 
 jobs:
   deploy:
     name: Deploy
     runs-on: ubuntu-latest
-
-    env:
-      AWS_REGION: ap-northeast-2
+    environment: production
 
     steps:
     - name: Checkout
       uses: actions/checkout@v2
-
-    - name: Set up environment variables
-      run: |
-        echo "AWS_REGION=ap-northeast-2" >> $GITHUB_ENV
-        echo "ECR_REGISTRY=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com" >> $GITHUB_ENV
 
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
@@ -35,23 +32,18 @@ jobs:
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v1
 
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v1
-
-    - name: Determine changed directories
-      id: determine-changes
+    - name: List Dockerfiles
+      id: list-dockerfiles
       run: |
-        echo "::set-output name=directories::$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | xargs -I % dirname % | sort -u)"
-      shell: bash
+        echo "::set-output name=dockerfiles::$(find Dockerfile -type f -name 'Dockerfile' -exec dirname {} \; | sort -u)"
 
-    - name: Build and push Docker images
+    - name: Build and push images
       run: |
-        for directory in ${{ steps.determine-changes.outputs.directories }}; do
-          if [ -f "$directory/VERSION" ]; then
-            image_name=$(basename $directory)
-            version=$(cat $directory/VERSION)
-            dockerfile="$directory/Dockerfile"
-            
-            docker buildx build -t $ECR_REGISTRY/$image_name:$version -f $dockerfile $directory --push
-          fi
+        for dockerfile in ${{ steps.list-dockerfiles.outputs.dockerfiles }}; do
+          SERVICE_NAME=$(basename $(dirname $dockerfile))
+          VERSION=$(cat $dockerfile/VERSION)
+          IMAGE_TAG=$SERVICE_NAME:$VERSION
+          
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY/$IMAGE_TAG -f $dockerfile/Dockerfile $dockerfile
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY/$IMAGE_TAG
         done

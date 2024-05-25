@@ -5,18 +5,24 @@ on:
     branches:
       - main
     paths:
-      - 'Dockerfile/**/VERSION'
-
-env:
-  AWS_REGION: ap-northeast-2
-  ECR_REPOSITORY: ${{ github.event_name == 'push' && github.event.head_ref != 'refs/heads/main' && github.event_path | dirname | split('/') | last }}
+      - 'Dockerfile/web/intro/VERSION'
+      - 'Dockerfile/web/join/VERSION'
+      - 'Dockerfile/web/login/VERSION'
+      - 'Dockerfile/web/home/VERSION'
+      - 'Dockerfile/was/intro/VERSION'
+      - 'Dockerfile/was/join/VERSION'
+      - 'Dockerfile/was/login/VERSION'
+      - 'Dockerfile/was/home/VERSION'
 
 jobs:
   deploy:
     name: Deploy
     runs-on: ubuntu-latest
     environment: production
-    if: github.event_name == 'push' && github.event.head_ref != 'refs/heads/main'
+
+    strategy:
+      matrix:
+        repo_name: [web-intro, web-home, web-login, web-join, was-intro, was-home, was-login, was-join]
 
     steps:
     - name: Checkout
@@ -25,27 +31,27 @@ jobs:
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}          
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ${{ env.AWS_REGION }}
+        aws-region: ap-northeast-2
 
     - name: Login to Amazon ECR
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v1
-      if: startsWith(github.ref, 'refs/heads/main')
 
     - name: Get version from VERSION file
       id: get-version
       run: |
-        VERSION=$(cat Dockerfile/web/$(basename $(dirname $GITHUB_EVENT_PATH))/VERSION)
+        VERSION=$(cat Dockerfile/${{ matrix.repo_name }}/VERSION)
         echo "::set-output name=version::$VERSION"
 
     - name: Build, tag, and push image to Amazon ECR
       id: build-image
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        ECR_REPOSITORY: ${{ matrix.repo_name }}
         IMAGE_TAG: ${{ steps.get-version.outputs.version }}
       run: |
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f Dockerfile/web/$(basename $(dirname $GITHUB_EVENT_PATH))/Dockerfile Dockerfile/web/$(basename $(dirname $GITHUB_EVENT_PATH))
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f Dockerfile/${{ matrix.repo_name }}/Dockerfile Dockerfile/${{ matrix.repo_name }}
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"

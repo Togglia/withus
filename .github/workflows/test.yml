@@ -56,12 +56,12 @@ jobs:
 
       - name: Check if version changed
         id: version-check
-        if: steps.compare-versions.result == 'success'  
+        if: steps.compare-versions.outputs.changed == 'success'  
         run: exit 1  
 
       - name: Build, tag, and push image to Amazon ECR
         id: build-image
-        if: steps.compare-versions.result == 'success'  
+        if: steps.compare-versions.outputs.changed == 'success'  
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: ${{ matrix.repo_name }}

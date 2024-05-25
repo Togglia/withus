@@ -9,15 +9,6 @@ on:
 
 env:
   AWS_REGION: ap-northeast-2
-  workflows:
-    - name: web-login
-      repository: web-login
-    - name: web-join
-      repository: web-join
-    - name: was-intro
-      repository: was-intro
-    - name: was-home
-      repository: was-home
 
 jobs:
   deploy:
@@ -57,8 +48,8 @@ jobs:
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           IMAGE_TAG: ${{ steps.get-version.outputs.version }}
-          ECR_REPOSITORY: ${{ steps.get-repository-name.outputs.repository }}
         run: |
+          ECR_REPOSITORY="${{ steps.get-repository-name.outputs.repository }}"
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f Dockerfile/${ECR_REPOSITORY}/Dockerfile Dockerfile/${ECR_REPOSITORY}
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"

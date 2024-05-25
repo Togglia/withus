@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - 'Dockerfile/web/*/VERSION'
+      - 'Dockerfile/**/VERSION'
 
 env:
   AWS_REGION: ap-northeast-2

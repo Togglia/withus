@@ -60,7 +60,6 @@ jobs:
         echo "::set-output name=version::$VERSION"
 
     - name: Build, tag, and push web/home image
-      if: steps.get-version-web-home.outputs.version
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         ECR_REPOSITORY: web-home
@@ -76,7 +75,6 @@ jobs:
         echo "::set-output name=version::$VERSION"
 
     - name: Build, tag, and push web/login image
-      if: steps.get-version-web-login.outputs.version
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         ECR_REPOSITORY: web-login
@@ -92,7 +90,6 @@ jobs:
         echo "::set-output name=version::$VERSION"
 
     - name: Build, tag, and push web/join image
-      if: steps.get-version-web-join.outputs.version
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         ECR_REPOSITORY: web-join
@@ -108,7 +105,6 @@ jobs:
         echo "::set-output name=version::$VERSION"
 
     - name: Build, tag, and push was/intro image
-      if: steps.get-version-was-intro.outputs.version
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         ECR_REPOSITORY: was-intro
@@ -124,7 +120,6 @@ jobs:
         echo "::set-output name=version::$VERSION"
 
     - name: Build, tag, and push was/home image
-      if: steps.get-version-was-home.outputs.version
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         ECR_REPOSITORY: was-home
@@ -140,7 +135,6 @@ jobs:
         echo "::set-output name=version::$VERSION"
 
     - name: Build, tag, and push was/login image
-      if: steps.get-version-was-login.outputs.version
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         ECR_REPOSITORY: was-login
@@ -156,7 +150,6 @@ jobs:
         echo "::set-output name=version::$VERSION"
 
     - name: Build, tag, and push was/join image
-      if: steps.get-version-was-join.outputs.version
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         ECR_REPOSITORY: was-join

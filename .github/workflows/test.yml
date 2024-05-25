@@ -1,21 +1,14 @@
 name: Dockerizing to Amazon ECR
 
 on:
-  push:       
+  push:
     branches:
       - main
     paths:
-      - 'Dockerfile/web/intro/VERSION'
-      - 'Dockerfile/web/home/VERSION'
-      - 'Dockerfile/web/login/VERSION'
-      - 'Dockerfile/web/join/VERSION'
-      - 'Dockerfile/was/intro/VERSION'
-      - 'Dockerfile/was/home/VERSION'
-      - 'Dockerfile/was/login/VERSION'
-      - 'Dockerfile/was/join/VERSION'
+      - 'Dockerfile/**/*.VERSION'
 
 env:
-  AWS_REGION: ap-northeast-2        
+  AWS_REGION: ap-northeast-2
 
 jobs:
   deploy:
@@ -24,120 +17,29 @@ jobs:
     environment: production
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v2
 
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}          
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ${{ env.AWS_REGION }}
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
 
-    - name: Login to Amazon ECR
-      id: login-ecr
-      uses: aws-actions/amazon-ecr-login@v1
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
 
-    - name: Get version from web/intro/VERSION file
-      id: get-version-web-intro
-      run: |
-        VERSION=$(cat Dockerfile/web/intro/VERSION)
-        echo "::set-output name=version::$VERSION"
+      - name: Build and push Docker images
+        run: |
+          for path in $(find Dockerfile -type f -name "*.VERSION" -exec dirname {} \; | sort -u); do
+            SERVICE_NAME=$(basename $path)
+            VERSION=$(cat $path/VERSION)
+            ECR_REPOSITORY="${SERVICE_NAME//-/_}"
+            IMAGE_TAG="${VERSION}"
 
-    - name: Build, tag, and push web/intro image
-      if: steps.get-version-web-intro.outputs.version
-      env:
-        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        ECR_REPOSITORY: web-intro
-        IMAGE_TAG: ${{ steps.get-version-web-intro.outputs.version }}
-      run: |
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f Dockerfile/web/intro/Dockerfile Dockerfile/web/intro
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-
-    - name: Get version from web/home/VERSION file
-      id: get-version-web-home
-      run: |
-        VERSION=$(cat Dockerfile/web/home/VERSION)
-        echo "::set-output name=version::$VERSION"
-
-    - name: Build, tag, and push web/home image
-      if: steps.get-version-web-home.outputs.version
-      env:
-        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        ECR_REPOSITORY: web-home
-        IMAGE_TAG: ${{ steps.get-version-web-home.outputs.version }}
-      run: |
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f Dockerfile/web/home/Dockerfile Dockerfile/web/home
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-
-    - name: Get version from web/login/VERSION file
-      id: get-version-web-login
-      run: |
-        VERSION=$(cat Dockerfile/web/login/VERSION)
-        echo "::set-output name=version::$VERSION"
-
-    - name: Build, tag, and push web/login image
-      if: steps.get-version-web-login.outputs.version
-      env:
-        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        ECR_REPOSITORY: web-login
-        IMAGE_TAG: ${{ steps.get-version-web-login.outputs.version }}
-      run: |
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f Dockerfile/web/login/Dockerfile Dockerfile/web/login
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-
-    - name: Get version from web/join/VERSION file
-      id: get-version-web-join
-      run: |
-        VERSION=$(cat Dockerfile/web/join/VERSION)
-        echo "::set-output name=version::$VERSION"
-
-    - name: Build, tag, and push web/join image
-      if: steps.get-version-web-join.outputs.version
-      env:
-        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        ECR_REPOSITORY: web-join
-        IMAGE_TAG: ${{ steps.get-version-web-join.outputs.version }}
-      run: |
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f Dockerfile/web/join/Dockerfile Dockerfile/web/join
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-
-    - name: Get version from was/intro/VERSION file
-      id: get-version-was-intro
-      run: |
-        VERSION=$(cat Dockerfile/was/intro/VERSION)
-        echo "::set-output name=version::$VERSION"
-
-    - name: Build, tag, and push was/intro image
-      if: steps.get-version-was-intro.outputs.version
-      env:
-        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        ECR_REPOSITORY: was-intro
-        IMAGE_TAG: ${{ steps.get-version-was-intro.outputs.version }}
-      run: |
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f Dockerfile/was/intro/Dockerfile Dockerfile/was/intro
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-
-    - name: Get version from was/home/VERSION file
-      id: get-version-was-home
-      run: |
-        VERSION=$(cat Dockerfile/was/home/VERSION)
-        echo "::set-output name=version::$VERSION"
-
-    - name: Build, tag, and push was/home image
-      if: steps.get-version-was-home.outputs.version
-      env:
-        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        ECR_REPOSITORY: was-home
-        IMAGE_TAG: ${{ steps.get-version-was-home.outputs.version }}
-      run: |
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f Dockerfile/was/home/Dockerfile Dockerfile/was/home
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-
-    - name: Get version from was/login/VERSION file
-      id: get-version-was-login
-      run: |
-        VERSION=$(cat Dockerfile/was/login/VERSION)
-        echo "::set-output name=version::$VERSION"
-
-    - name: Build, tag
+            echo "Building $SERVICE_NAME image with tag $IMAGE_TAG"
+            docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f $path/Dockerfile $path
+            docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          done

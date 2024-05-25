@@ -5,17 +5,18 @@ on:
     branches:
       - main
     paths:
-      - '**/VERSION'
+      - 'Dockerfile/web/*/VERSION'
+
+env:
+  AWS_REGION: ap-northeast-2
+  ECR_REPOSITORY: ${{ github.event_name == 'push' && github.event.head_ref != 'refs/heads/main' && github.event_path | dirname | split('/') | last }}
 
 jobs:
   deploy:
     name: Deploy
     runs-on: ubuntu-latest
     environment: production
-
-    strategy:
-      matrix:
-        repo_name: [web-intro, web-home, web-login, web-join, was-intro, was-home, was-login, was-join]
+    if: github.event_name == 'push' && github.event.head_ref != 'refs/heads/main'
 
     steps:
     - name: Checkout
@@ -24,40 +25,27 @@ jobs:
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}          
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ap-northeast-2
-
-    - name: Check if VERSION has changed
-      id: check-version
-      run: |
-        if [[ "${{ github.event_name }}" == "push" && "${{ github.event.changes.VERSION }}" ]]; then
-          echo "VERSION file has changed."
-        else
-          echo "VERSION file has not changed. Skipping the deployment."
-          exit 78
-        fi
+        aws-region: ${{ env.AWS_REGION }}
 
     - name: Login to Amazon ECR
       id: login-ecr
-      if: steps.check-version.run == 'VERSION file has changed.'
       uses: aws-actions/amazon-ecr-login@v1
+      if: startsWith(github.ref, 'refs/heads/main')
 
     - name: Get version from VERSION file
       id: get-version
-      if: steps.check-version.run == 'VERSION file has changed.'
       run: |
-        VERSION=$(cat Dockerfile/${{ matrix.repo_name }}/VERSION)
+        VERSION=$(cat Dockerfile/web/$(basename $(dirname $GITHUB_EVENT_PATH))/VERSION)
         echo "::set-output name=version::$VERSION"
 
     - name: Build, tag, and push image to Amazon ECR
       id: build-image
-      if: steps.check-version.run == 'VERSION file has changed.'
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        ECR_REPOSITORY: ${{ matrix.repo_name }}
         IMAGE_TAG: ${{ steps.get-version.outputs.version }}
       run: |
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f Dockerfile/${{ matrix.repo_name }}/Dockerfile Dockerfile/${{ matrix.repo_name }}
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f Dockerfile/web/$(basename $(dirname $GITHUB_EVENT_PATH))/Dockerfile Dockerfile/web/$(basename $(dirname $GITHUB_EVENT_PATH))
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"

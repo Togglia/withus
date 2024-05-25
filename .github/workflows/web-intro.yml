@@ -9,6 +9,7 @@ env:
   AWS_REGION: ap-northeast-2        
   ECR_REPOSITORY: test            
   
+
 jobs:
   deploy:
     name: Deploy
@@ -34,12 +35,8 @@ jobs:
       id: build-image
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        IMAGE_TAG: ${{ github.ref_name }}
+        IMAGE_TAG: ${{ github.sha }}
       run: |
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f path/to/dockerfiles/dockerfile-web-intro .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-      outputs:
-        image: ${{ steps.build-image.outputs.image }}
-
-    - name: Output the image URI
-      run: echo "Image URI: ${{ steps.build-image.outputs.image }}"
+        echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"

@@ -50,6 +50,11 @@ jobs:
             exit 0
           fi
 
+      - name: Check if version changed
+        id: version-check
+        if: steps.compare-versions.result == 'success'  # 버전이 변경되지 않았을 때만 실행
+        run: exit 78  # Bash에서 78은 건너뛰기를 나타냄
+
       - name: Build, tag, and push image to Amazon ECR
         id: build-image
         env:

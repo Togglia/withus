@@ -16,6 +16,16 @@ jobs:
     strategy:
       matrix:
         dockerfile-path:
+          - 'Dockerfile/web/intro/Dockerfile'
+          - 'Dockerfile/web/home/Dockerfile'
+          - 'Dockerfile/web/login/Dockerfile'
+          - 'Dockerfile/web/join/Dockerfile'
+          - 'Dockerfile/was/intro/Dockerfile'
+          - 'Dockerfile/was/home/Dockerfile'
+          - 'Dockerfile/was/login/Dockerfile'
+          - 'Dockerfile/was/join/Dockerfile'
+          
+        VERSION-path:
           - 'Dockerfile/web/intro/VERSION'
           - 'Dockerfile/web/home/VERSION'
           - 'Dockerfile/web/login/VERSION'
@@ -24,7 +34,7 @@ jobs:
           - 'Dockerfile/was/home/VERSION'
           - 'Dockerfile/was/login/VERSION'
           - 'Dockerfile/was/join/VERSION'
-    
+        
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -43,7 +53,7 @@ jobs:
       - name: Get version from VERSION file
         id: get-version
         run: |
-          VERSION=$(cat ${{ matrix.dockerfile-path }})
+          VERSION=$(cat ${{ matrix.VERSION-path }})
           echo "::set-output name=version::$VERSION"
 
       - name: Extract repository name

@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.sql.*" %>
-<%@ page import="javax.servlet.http.*,java.io.*" %>
+<%@ page import="javax.servlet.http.*, java.io.*, redis.clients.jedis.Jedis" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -41,15 +41,24 @@
             pstmt.setString(2, password);
             rs = pstmt.executeQuery();
 
-            
-
             if (rs.next()) {
-                out.println("Login Successful");
                 dbuserId = rs.getString("userID");
                 dbuserPassword = rs.getString("password");
+
+                // Redis에 세션 저장
+                try {
+                    Jedis jedis = new Jedis("trip-prd-redis.3r7xgx.clustercfg.apn2.cache.amazonaws.com", 6379);
+                    String sessionId = session.getId();
+                    jedis.set(userID, sessionId);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                response.sendRedirect("https://www.withus.site?userId=" + userID);
             } else {
-                out.println("Invalid credentials. Please try again.");
+                out.println("<script>showPopup();</script>");
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -75,13 +84,7 @@
                 }                                  
             }  
         }
-        if(userID.equals(dbuserId) && password.equals(dbuserPassword)){
-            String RsessionId = request.getRequestedSessionId();
-            String sessionId = session.getId();
-            response.sendRedirect("https://www.withus.site/home?userId=" + userID + "&sessionId=" + sessionId);
-        } else {
-            out.println("Session Error");
-        }        
+           
     %>
 </body>                                                                
 </html>

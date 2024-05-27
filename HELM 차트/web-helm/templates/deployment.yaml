@@ -3,6 +3,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ .name }}
+  namespace: web
   labels:
     app: {{ .name }}
 spec:
@@ -34,11 +35,6 @@ spec:
       containers:
         - name: {{ .name }}
           image: {{ $.Values.image.repository }}/{{ .name }}:{{ .imageTag }}
-          command: ["/bin/sh"]
-          args: ["-c", "while true; do echo $(date -u) >> /data/out1.txt; sleep 5; done"]
-          volumeMounts:
-          - name: persistent-storage
-            mountPath: /data          
           ports:
             - containerPort: 80
           livenessProbe:
@@ -57,10 +53,6 @@ spec:
             limits:
               memory: {{ $.Values.resources.limits.memory }}
               cpu: {{ $.Values.resources.limits.cpu }}
-      volumes:
-        - name: persistent-storage
-          persistentVolumeClaim:
-            claimName: efs-claim
   strategy:
     type: RollingUpdate
     rollingUpdate:

@@ -47,7 +47,7 @@ jobs:
         run: |
           if [ "${{ steps.get-current-version.outputs.version }}" != "${{ steps.get-version.outputs.version }}" ]; then
             echo "Versions are different. Proceeding with deployment"
-            echo "::set-output name=changed::success"
+            echo "::set-output name=changed::true"
           else
             echo "Versions are the same. Skipping deployment."
             exit 0
@@ -56,7 +56,7 @@ jobs:
 
       - name: Build, tag, and push image to Amazon ECR
         id: build-image
-        if: steps.compare-versions.outputs.changed == 'success'  
+        if: steps.compare-versions.outputs.changed == 'true'  
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: ${{ matrix.repo_name }}

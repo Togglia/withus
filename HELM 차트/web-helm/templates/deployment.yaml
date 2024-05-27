@@ -38,10 +38,10 @@ spec:
           command: ["/bin/sh"]
           args: ["-c", "while true; do echo $(date -u) >> /data/out2.txt; sleep 5; done"]
           volumeMounts:
-            - name: persistent-storage
-              mountPath: /data
+          - name: persistent-storage
+            mountPath: /data
           ports:
-            - containerPort: 80
+          - containerPort: 80
           livenessProbe:
             httpGet:
               path: /

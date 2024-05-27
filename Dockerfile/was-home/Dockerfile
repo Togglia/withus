@@ -14,11 +14,15 @@ rm apache-tomcat-9.0.89.tar.gz && \
 wget https://dlm.mariadb.com/3752081/Connectors/java/connector-java-3.3.3/mariadb-java-client-3.3.3.jar && \
 mv mariadb-java-client-3.3.3.jar $CATALINA_HOME/lib/ && \
 rm -rf $CATALINA_HOME/webapps/* && \
-mkdir -p $CATALINA_HOME/webapps/ROOT && \
+mkdir -p $CATALINA_HOME/webapps/ROOT  && \
 wget https://github.com/ran-jit/tomcat-cluster-redis-session-manager/releases/download/2.0.4/tomcat-cluster-redis-session-manager.zip && \
 unzip tomcat-cluster-redis-session-manager.zip -d $CATALINA_HOME && \
 mv $CATALINA_HOME/tomcat-cluster-redis-session-manager/lib/* $CATALINA_HOME/lib/ && \
-mv $CATALINA_HOME/tomcat-cluster-redis-session-manager/conf/* $CATALINA_HOME/conf/ 
+mv $CATALINA_HOME/tomcat-cluster-redis-session-manager/conf/* $CATALINA_HOME/conf/ && \ 
+wget https://repo1.maven.org/maven2/redis/clients/jedis/3.7.1/jedis-3.7.1.jar && \
+cp jedis-3.7.1.jar $JAVA_HOME/lib/ && \
+mv jedis-3.7.1.jar $CATALINA_HOME/lib/
+
 
 COPY ./redis-data-cache.properties $CATALINA_HOME/conf/
 COPY ./sessioncheck.jsp $CATALINA_HOME/webapps/ROOT/
@@ -33,7 +37,8 @@ rm -rf /var/cache/apk/*
 ENV JAVA_HOME /usr/lib/jvm/java-1.8-openjdk
 ENV CATALINA_HOME /usr/local/tomcat9.0
 ENV PATH $JAVA_HOME/bin:$CATALINA_HOME/bin:$PATH
-ENV CLASSPATH .:$JAVA_HOME/jre/lib/ext:$JAVA_HOME/lib/tools.jar:$CATALINA_HOME/lib/jsp-api.jar:$CATALINA_HOME/lib/servlet-api.jar:$JAVA_HOME/lib/mariadb-java-client-3.3.3.jar:$CATALINA_HOME/lib/mariadb-java-client-3.3.3.jar
+ENV CLASSPATH .:$JAVA_HOME/jre/lib/ext:$JAVA_HOME/lib/tools.jar:$CATALINA_HOME/lib/jsp-api.jar:$CATALINA_HOME/lib/servlet-api.jar:$CATALINA_HOME/lib/mariadb-java-client-3.3.3.jar:$CATALINA_HOME/lib/jedis-3.7.1.jar:$CATALINA_HOME/lib/tomcat-cluster-redis-session-manager-2.0.4.jar
+
 
 COPY --from=builder $CATALINA_HOME $CATALINA_HOME
 

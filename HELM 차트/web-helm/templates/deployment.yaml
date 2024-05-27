@@ -37,10 +37,6 @@ spec:
           image: {{ $.Values.image.repository }}/{{ .name }}:{{ .imageTag }}
           ports:
             - containerPort: 80
-          livenessProbe:
-            httpGet:
-              path: /
-              port: 80
           readinessProbe:
             tcpSocket:
               port: 80

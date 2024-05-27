@@ -58,9 +58,9 @@ spec:
               memory: {{ $.Values.resources.limits.memory }}
               cpu: {{ $.Values.resources.limits.cpu }}
       volumes:
-      - name: persistent-storage
-        persistentVolumeClaim:
-          claimName: efs-claim
+        - name: persistent-storage
+          persistentVolumeClaim:
+            claimName: efs-claim
   strategy:
     type: RollingUpdate
     rollingUpdate:

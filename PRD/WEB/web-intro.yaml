@@ -35,6 +35,14 @@ spec:
         image: 891377152236.dkr.ecr.ap-northeast-2.amazonaws.com/web-intro:v2.1
         ports:
         - containerPort: 80
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80  
+          initialDelaySeconds: 30
+          timeoutSeconds: 5
+          periodSeconds: 10
+          failureThreshold: 3
         readinessProbe:
           tcpSocket:
             port: 80

@@ -33,6 +33,11 @@ spec:
       containers:
       - name: web-intro
         image: 891377152236.dkr.ecr.ap-northeast-2.amazonaws.com/web-intro:v1.1
+        command: ["/bin/sh"]
+        args: ["-c", "while true; do echo $(date -u) >> /data/out2.txt; sleep 5; done"]
+        volumeMounts:
+        - name: persistent-storage
+          mountPath: /data        
         ports:
         - containerPort: 80
         livenessProbe:
@@ -51,6 +56,10 @@ spec:
           limits:
             memory: 50Mi
             cpu: 100m
+      volumes:
+      - name: persistent-storage
+        persistentVolumeClaim:
+          claimName: efs-claim            
   strategy:
     type: RollingUpdate
     rollingUpdate:

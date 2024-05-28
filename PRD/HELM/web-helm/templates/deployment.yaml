@@ -36,13 +36,24 @@ spec:
           image: {{ $.Values.image.repository }}/{{ .name }}:{{ .imageTag }}
           ports:
           - containerPort: 80       
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8080
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          readinessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 15
+            periodSeconds: 10
           resources:
             requests:
-              memory: {{ $.Values.resources.requests.memory }}
-              cpu: {{ $.Values.resources.requests.cpu }}
+              memory: 250Mi
+              cpu: 250m
             limits:
-              memory: {{ $.Values.resources.limits.memory }}
-              cpu: {{ $.Values.resources.limits.cpu }}
+              memory: 250Mi
+              cpu: 250m
   strategy:
     type: RollingUpdate
     rollingUpdate:

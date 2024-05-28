@@ -1,0 +1,33 @@
+replicaCount: 1
+
+image:
+  repository: 891377152236.dkr.ecr.ap-northeast-2.amazonaws.com 
+  pullPolicy: IfNotPresent
+
+resources:
+  requests:
+    memory: 200Mi
+    cpu: 100m
+  limits:
+    memory: 200Mi
+    cpu: 100m
+
+service:
+  type: NodePort
+  port: 80
+
+hpa:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 50
+
+apps:
+  - name: web-intro
+    imageTag: v2.1
+  - name: web-join
+    imageTag: v3.0
+  - name: web-login
+    imageTag: v2.2
+  - name: web-home
+    imageTag: v2.1

@@ -50,11 +50,11 @@ spec:
           periodSeconds: 10        
         resources:
           requests:
-            memory: "50Mi"
-            cpu: "100m"
+            memory: 200Mi
+            cpu: 200m
           limits:
-            memory: "50Mi"
-            cpu: "100m"
+            memory: 200Mi
+            cpu: 200m
   strategy:
     type: RollingUpdate
     rollingUpdate:

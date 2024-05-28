@@ -47,9 +47,9 @@
 
                 // Redis에 세션 저장
                 try {
-                    Jedis jedis = new Jedis("redis-test.3r7xgx.ng.0001.apn2.cache.amazonaws.com", 6379);
+                    Jedis jedisSave = new Jedis("redis-test.3r7xgx.ng.0001.apn2.cache.amazonaws.com", 6379);
                     String sessionId = session.getId();
-                    jedis.set(userID, sessionId);
+                    jedisSave.set(userID, sessionId);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

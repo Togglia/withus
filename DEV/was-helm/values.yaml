@@ -18,7 +18,7 @@ apps:
   - name: was-login
     imageTag: v0.1
   - name: was-home
-    imageTag: v0.1
+    imageTag: v0.3
 
 service:
   - 172.20.30.10

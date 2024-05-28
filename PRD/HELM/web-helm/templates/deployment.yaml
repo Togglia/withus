@@ -40,26 +40,26 @@ spec:
         - name: {{ .name }}
           image: {{ $.Values.image.repository }}/{{ .name }}:{{ .imageTag }}
           ports:
-          - containerPort: 80  # 포트를 80으로 수정
+          - containerPort: 80  
           livenessProbe:
             httpGet:
               path: /
-              port: 80  # 포트를 80으로 수정
+              port: 80  
             initialDelaySeconds: 15
             periodSeconds: 10
             timeoutSeconds: 60
           readinessProbe:
             tcpSocket:
-              port: 80  # 포트를 80으로 수정
+              port: 80  
             initialDelaySeconds: 15
             periodSeconds: 10
             timeoutSeconds: 30
           resources:
             requests:
-              memory: 250Mi  # 메모리와 CPU 요청을 250Mi로 증가
+              memory: 250Mi  
               cpu: 250m
             limits:
-              memory: 250Mi  # 메모리와 CPU 한계를 250Mi로 증가
+              memory: 250Mi  
               cpu: 250m
 ---
 {{- end }}

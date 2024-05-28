@@ -34,7 +34,6 @@
             z-index: 1000;
             box-shadow: 0 2px 4px #81d4fa;
         }
-
         ul {
             list-style-type: none;
             padding: 0;
@@ -45,7 +44,6 @@
             justify-content: space-around;
             margin-top: 125px;
         }
-
         div.category {
             margin-bottom: 20px;
             margin-left: 20px;
@@ -89,8 +87,8 @@
         .category-img {
             display: block;
             margin: 20px auto;
-            max-width: 100%;
-            height: auto;
+            width: 700px;
+            height: 500px;
             border-radius: 10px;
         }
         .category-text {
@@ -111,6 +109,12 @@
             z-index: 1001;
             margin-top: 10px;
         }
+        .button-container {
+            display: flex;
+            justify-content: center;
+            align-items: center; /* 버튼을 세로 방향으로도 가운데 정렬하고 싶으면 추가 */
+        }
+
         .reserve-button {
             padding: 10px 50px;
             background-color: #ff783d;
@@ -119,7 +123,6 @@
             cursor: pointer;
             font-size: 16px;
             width: 200px;
-            margin-left: 435px;
         }
         
         .reserve-button:hover {
@@ -148,7 +151,7 @@
         } else {
             if (!userId.equals("null") && redisSessionId != null) {
             %>
-            <div class="user-info">Welcome, <%= userId %>! <a href="https://www.withus.site/">Logout</a></div>
+            <div class="user-info"> <%= userId %>의 여행지는 어디인가요?? <a href="https://www.withus.site/">Logout</a></div>
 
         <% 
         }else {
@@ -204,11 +207,12 @@
                         합리적인 가격으로 북경을 관광 하는 상품으로, 대표적인 필수관광지를 포함해 알찬 구성으로 이루어진 일정을 만나보세요.<br>
                         <h3> 299,000원 ~ </h3>
                     </p>
-                    <button id="reserveButton" class="reserve-button" onclick="showReservationMessage()">예약하기</button>
-                        
+                    <div class="button-container">
+                        <button class="reserve-button" onclick="showReservationMessage()">예약하기</button>
+                    </div>   
                     <script>
                         function showReservationMessage() {
-                            alert('예약완료');
+                            alert(' 예약완료');
                         }
                     </script>    
 
@@ -223,8 +227,9 @@
                         오사카 대표관광지를 관광하고 오사카 중심에 위치한 호텔 숙박으로 저녁시간까지 알차게 보낼 수 있습니다.<br>
                         <h3> 299,000원 ~ </h3>
                     </p>
-                    <button id="reserveButton" class="reserve-button" onclick="showReservationMessage()">예약하기</button>
-                        
+                    <div class="button-container">
+                        <button class="reserve-button" onclick="showReservationMessage()">예약하기</button>
+                    </div>                         
                     <script>
                         function showReservationMessage() {
                             alert('예약완료');
@@ -242,8 +247,9 @@
                             시내 중심 5성호텔+핫플레이스+이색체험으로, '새로운 방콕'을 발견하고 싶은 분께 추천드립니다.<br>
                             <h3> 529,000원 ~ </h3>
                         </p>
-                        <button id="reserveButton" class="reserve-button" onclick="showReservationMessage()">예약하기</button>
-                            
+                        <div class="button-container">
+                            <button class="reserve-button" onclick="showReservationMessage()">예약하기</button>
+                        </div>                             
                         <script>
                             function showReservationMessage() {
                                 alert('예약완료');
@@ -260,8 +266,9 @@
                             월드체인 5성급 호텔 숙박과 다낭 여행에서 꼭 방문해야 할 명소와 다양한 특식이 포함되어 있습니다.<br>
                             <h3> 519,000원 ~ </h3>
                         </p>
-                        <button id="reserveButton" class="reserve-button" onclick="showReservationMessage()">예약하기</button>
-                            
+                        <div class="button-container">
+                            <button class="reserve-button" onclick="showReservationMessage()">예약하기</button>
+                        </div>                             
                         <script>
                             function showReservationMessage() {
                                 alert('예약완료');
@@ -278,8 +285,9 @@
                             아름다운 선셋과 씨푸드로 유명한 짐바란/울루와뚜 지역의 인기 호텔로 구성된 상품입니다.<br>
                             <h3> 1,589,000원 ~ </h3>
                         </p>
-                        <button id="reserveButton" class="reserve-button" onclick="showReservationMessage()">예약하기</button>
-                            
+                        <div class="button-container">
+                            <button class="reserve-button" onclick="showReservationMessage()">예약하기</button>
+                        </div>                             
                         <script>
                             function showReservationMessage() {
                                 alert('예약완료');
@@ -296,8 +304,9 @@
                             전 일정 싱가포르 숙박으로 구석구석 제대로 싱가포르를 즐길 수 있는 상품입니다.<br>
                             <h3> 1,403,400원 ~ </h3>
                         </p>
-                        <button id="reserveButton" class="reserve-button" onclick="showReservationMessage()">예약하기</button>
-                            
+                        <div class="button-container">
+                            <button class="reserve-button" onclick="showReservationMessage()">예약하기</button>
+                        </div>                             
                         <script>
                             function showReservationMessage() {
                                 alert('예약완료');
@@ -314,8 +323,9 @@
                             풀을 보유한 총 80채의 프라이빗 아일랜드 #플로팅 조식, 익스커션, 스파 등 다양한 포함 사항<br>
                             <h3> 4,860,000원 ~ </h3>
                         </p>
-                        <button id="reserveButton" class="reserve-button" onclick="showReservationMessage()">예약하기</button>
-                            
+                        <div class="button-container">
+                            <button class="reserve-button" onclick="showReservationMessage()">예약하기</button>
+                        </div>                             
                         <script>
                             function showReservationMessage() {
                                 alert('예약완료');
@@ -332,8 +342,9 @@
                             영화 속 명소가 포함되어 대만의 감성을 느낄 수 있는 꾸준한 인기의 상품입니다.<br>
                             <h3> 848,100원 ~ </h3>
                         </p>
-                        <button id="reserveButton" class="reserve-button" onclick="showReservationMessage()">예약하기</button>
-                            
+                        <div class="button-container">
+                            <button class="reserve-button" onclick="showReservationMessage()">예약하기</button>
+                        </div>                             
                         <script>
                             function showReservationMessage() {
                                 alert('예약완료');
@@ -350,8 +361,9 @@
                             국내선 항공 3회 탑승으로 편안한 장거리이동, 카파도키아 단독 동굴호텔이 포함되어 있습니다.<br>
                             <h3> 5,501,000원~ </h3>
                         </p>
-                        <button id="reserveButton" class="reserve-button" onclick="showReservationMessage()">예약하기</button>
-                            
+                        <div class="button-container">
+                            <button class="reserve-button" onclick="showReservationMessage()">예약하기</button>
+                        </div>                             
                         <script>
                             function showReservationMessage() {
                                 alert('예약완료');
@@ -368,8 +380,9 @@
                             다양한 자연과 문화, 예술로 가득한 잉글랜드, 스코틀랜드, 아일랜드를 모두 만나보는 정통 영국 일주 여행입니다.<br>
                             <h3> 4,790,000원 ~ </h3>
                         </p>
-                        <button id="reserveButton" class="reserve-button" onclick="showReservationMessage()">예약하기</button>
-                            
+                        <div class="button-container">
+                            <button class="reserve-button" onclick="showReservationMessage()">예약하기</button>
+                        </div>                             
                         <script>
                             function showReservationMessage() {
                                 alert('예약완료');
@@ -386,8 +399,9 @@
                             알프스를 깊이있고 여유롭게 즐기는 스위스 일주 여행 시내호텔 1박 이상 숙박, 알프스의 명산을 방문하며 진정한 힐링을 즐기는 여행<br>
                             <h3> 8,790,000원 ~ </h3>
                         </p>
-                        <button id="reserveButton" class="reserve-button" onclick="showReservationMessage()">예약하기</button>
-                            
+                        <div class="button-container">
+                            <button class="reserve-button" onclick="showReservationMessage()">예약하기</button>
+                        </div>                             
                         <script>
                             function showReservationMessage() {
                                 alert('예약완료');
@@ -404,13 +418,15 @@
                             여유롭고 깊이있는 일정으로 유네스코 가득한 이탈리아를 관광하는 쉼표in유럽 상품입니다.<br>
                             <h3> 5,599,000원 ~ </h3>
                         </p>
-                        <button id="reserveButton" class="reserve-button" onclick="showReservationMessage()">예약하기</button>
-                            
+                        <div class="button-container">
+                            <button class="reserve-button" onclick="showReservationMessage()">예약하기</button>
+                        </div>                             
                         <script>
                             function showReservationMessage() {
                                 alert('예약완료');
                             }
                         </script>
+                    <% break;
                     case "프랑스": %>
                         <img class="category-img" src="https://trip-bucket-1.s3.ap-northeast-2.amazonaws.com/trip-folder/France.jpeg" alt="프랑스"></p>
 
@@ -421,7 +437,9 @@
                             낭만이 가득한 파리여행, 프랑스를 찾는 관광객이 꼭 찾는 명소 '몽생미쉘'을 방문하는 여행입니다.<br>
                             <h3> 3,929,000원~ </h3>
                         </p>
-                        <button id="reserveButton" class="reserve-button" onclick="showReservationMessage()">예약하기</button>
+                        <div class="button-container">
+                            <button class="reserve-button" onclick="showReservationMessage()">예약하기</button>
+                        </div>  id="reserveButton" class="reserve-button" onclick="showReservationMessage()">예약하기</button>
                             
                         <script>
                             function showReservationMessage() {
@@ -439,8 +457,9 @@
                             독일의 함부르크에서 베를린을 지나 뮌헨까지! 매력적인 나라 독일을 깊이있게 여행하는 합리적인 가격의 상품입니다.<br>
                             <h3> 3,679,000원 ~ </h3>
                         </p>
-                        <button id="reserveButton" class="reserve-button" onclick="showReservationMessage()">예약하기</button>
-                            
+                        <div class="button-container">
+                            <button class="reserve-button" onclick="showReservationMessage()">예약하기</button>
+                        </div>                             
                         <script>
                             function showReservationMessage() {
                                 alert('예약완료');
@@ -457,8 +476,9 @@
                             낭만과 품격이 가득한 프라하 출도착 자유여행 항공권 + 호텔 1박이 포함되어있는 프라하 자유여행입니다.<br>
                             <h3> 2,899,000원 ~ </h3>
                         </p>
-                        <button id="reserveButton" class="reserve-button" onclick="showReservationMessage()">예약하기</button>
-                            
+                        <div class="button-container">
+                            <button class="reserve-button" onclick="showReservationMessage()">예약하기</button>
+                        </div>                             
                         <script>
                             function showReservationMessage() {
                                 alert('예약완료');
@@ -475,8 +495,9 @@
                             항공+호텔+왕복공항셔틀+여행자보험이 포함된 괌 자유여행 상품입니다<br>
                             <h3> 689,000원~ </h3>
                         </p>
-                        <button id="reserveButton" class="reserve-button" onclick="showReservationMessage()">예약하기</button>
-                            
+                        <div class="button-container">
+                            <button class="reserve-button" onclick="showReservationMessage()">예약하기</button>
+                        </div>                             
                         <script>
                             function showReservationMessage() {
                                 alert('예약완료');
@@ -493,8 +514,9 @@
                             [왕복항공권+호텔+현지공항미팅/샌딩+여행자보험]이 포함된 사이판 PIC 자유여행 상품입니다.<br>
                             <h3> 704,000원 ~ </h3>
                         </p>
-                        <button id="reserveButton" class="reserve-button" onclick="showReservationMessage()">예약하기</button>
-                            
+                        <div class="button-container">
+                            <button class="reserve-button" onclick="showReservationMessage()">예약하기</button>
+                        </div>                             
                         <script>
                             function showReservationMessage() {
                                 alert('예약완료');
@@ -511,8 +533,9 @@
                             비비드 시드니 축제기간 동안 시드니를 누비는 하나투어 비비드 크루즈에 탑승하여 맛있는 디너를 즐길 수 있는 상품입니다.<br>
                             <h3> 975,000원 ~ </h3>
                         </p>
-                        <button id="reserveButton" class="reserve-button" onclick="showReservationMessage()">예약하기</button>
-                            
+                        <div class="button-container">
+                            <button class="reserve-button" onclick="showReservationMessage()">예약하기</button>
+                        </div>                             
                         <script>
                             function showReservationMessage() {
                                 alert('예약완료');
@@ -529,8 +552,9 @@
                             자유의 여신상 크루즈, 원월드 전망대, 나이아가라 크루즈, 퀘벡 관광을 포함하였습니다.<br>
                             <h3> 3,999,000원~ </h3>
                         </p>
-                        <button id="reserveButton" class="reserve-button" onclick="showReservationMessage()">예약하기</button>
-                            
+                        <div class="button-container">
+                            <button class="reserve-button" onclick="showReservationMessage()">예약하기</button>
+                        </div>                             
                         <script>
                             function showReservationMessage() {
                                 alert('예약완료');
@@ -547,8 +571,9 @@
                             자유의 여신상 크루즈, 원월드 전망대, 나이아가라 크루즈, 퀘벡 관광을 포함하였습니다.<br>
                             <h3> 3,999,000원~ </h3>
                         </p>
-                        <button id="reserveButton" class="reserve-button" onclick="showReservationMessage()">예약하기</button>
-                            
+                        <div class="button-container">
+                            <button class="reserve-button" onclick="showReservationMessage()">예약하기</button>
+                        </div>                             
                         <script>
                             function showReservationMessage() {
                                 alert('예약완료');

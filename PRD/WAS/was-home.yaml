@@ -37,7 +37,7 @@ spec:
             app: was-home
       containers:
       - name: was-home
-        image: 891377152236.dkr.ecr.ap-northeast-2.amazonaws.com/was-home:v3.3
+        image: 891377152236.dkr.ecr.ap-northeast-2.amazonaws.com/was-home:v0.1
         ports:
         - containerPort: 8080
 ---

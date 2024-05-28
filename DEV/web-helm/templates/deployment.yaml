@@ -56,6 +56,11 @@ spec:
             limits:
               memory: {{ $.Values.resources.limits.memory }}
               cpu: {{ $.Values.resources.limits.cpu }}
+      volumes:
+      - name: persistent-storage
+        nfs:
+          server: {{ .Values.nfs.server }}
+          path: {{ .Values.nfs.path }}
     strategy:
       type: RollingUpdate
       rollingUpdate:

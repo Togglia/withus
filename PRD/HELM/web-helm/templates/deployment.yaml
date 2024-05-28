@@ -47,7 +47,7 @@ spec:
               port: 80  # 포트를 80으로 수정
             initialDelaySeconds: 15
             periodSeconds: 10
-            timeoutSeconds: 30
+            timeoutSeconds: 60
           readinessProbe:
             tcpSocket:
               port: 80  # 포트를 80으로 수정

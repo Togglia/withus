@@ -3,7 +3,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ .name }}
-  namespace: web
   labels:
     app: {{ .name }}
 spec:
@@ -36,7 +35,15 @@ spec:
         - name: {{ .name }}
           image: {{ $.Values.image.repository }}/{{ .name }}:{{ .imageTag }}
           ports:
-            - containerPort: 80
+          - containerPort: 80
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80  
+            initialDelaySeconds: 30
+            timeoutSeconds: 5
+            periodSeconds: 10
+            failureThreshold: 3  
           readinessProbe:
             tcpSocket:
               port: 80

@@ -57,8 +57,7 @@ spec:
               memory: {{ $.Values.resources.limits.memory }}
               cpu: {{ $.Values.resources.limits.cpu }}
       volumes:
-      - name: persistent-storage
-        nfs:
+      - nfs:
           server: {{ .Values.nfs.server }}
           path: {{ .Values.nfs.path }}
     strategy:

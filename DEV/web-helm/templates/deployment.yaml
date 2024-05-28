@@ -59,8 +59,8 @@ spec:
       volumes:
         - name: persistent-storage
           nfs:
-            server: {{ .Values.nfs.server }}
-            path: {{ .Values.nfs.path }}
+            server: {{ $.Values.nfs.server }}
+            path: {{ $.Values.nfs.path }}
     strategy:
       type: RollingUpdate
       rollingUpdate:

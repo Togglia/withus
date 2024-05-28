@@ -28,6 +28,6 @@ apps:
   - name: web-join
     imageTag: v2.1
   - name: web-login
-    imageTag: v2.1
-  - name: web-home
     imageTag: v2.2
+  - name: web-home
+    imageTag: v2.1

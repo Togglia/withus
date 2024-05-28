@@ -26,8 +26,8 @@ apps:
   - name: web-intro
     imageTag: v0.1
   - name: web-join
-    imageTag: v2.1
+    imageTag: v0.1
   - name: web-login
     imageTag: v0.1
   - name: web-home
-    imageTag: v0.1
+    imageTag: v0.3

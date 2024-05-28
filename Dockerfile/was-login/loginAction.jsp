@@ -47,14 +47,14 @@
 
                 // Redis에 세션 저장
                 try {
-                    Jedis jedis = new Jedis("trip-prd-redis.3r7xgx.clustercfg.apn2.cache.amazonaws.com", 6379);
+                    Jedis jedis = new Jedis("redis-test.3r7xgx.ng.0001.apn2.cache.amazonaws.com", 6379);
                     String sessionId = session.getId();
                     jedis.set(userID, sessionId);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
 
-                response.sendRedirect("https://www.withus.site?userId=" + userID);
+                response.sendRedirect("https://www.withus.site/home?userId=" + userID);
             } else {
                 out.println("<script>showPopup();</script>");
             }

@@ -51,10 +51,10 @@ spec:
         resources:
           requests:
             memory: 50Mi
-            cpu: 50m
+            cpu: 100m
           limits:
             memory: 50Mi
-            cpu: 50m
+            cpu: 100m
   strategy:
     type: RollingUpdate
     rollingUpdate:

@@ -36,4 +36,4 @@ enablePersistentVolume: true
 
 nfs:
   server: fs-0c1c8133661fbf071.efs.ap-northeast-2.amazonaws.com
-  path: /
+  path: /data

@@ -32,7 +32,7 @@ spec:
             app: web-home
       containers:
       - name: web-home
-        image: 891377152236.dkr.ecr.ap-northeast-2.amazonaws.com/web-home:v0.1
+        image: 891377152236.dkr.ecr.ap-northeast-2.amazonaws.com/web-home:v0.2
         ports:
         - containerPort: 80
         livenessProbe:

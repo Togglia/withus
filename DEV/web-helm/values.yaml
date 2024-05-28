@@ -31,3 +31,9 @@ apps:
     imageTag: v0.1
   - name: web-home
     imageTag: v0.3
+
+enablePersistentVolume: true
+
+nfs:
+  server: "fs-0c1c8133661fbf071.efs.ap-northeast-2.amazonaws.com"
+  path: "/"

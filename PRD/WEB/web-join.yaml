@@ -32,7 +32,7 @@ spec:
             app: web-join
       containers:
       - name: web-join
-        image: 891377152236.dkr.ecr.ap-northeast-2.amazonaws.com/web-join:v3.0
+        image: 891377152236.dkr.ecr.ap-northeast-2.amazonaws.com/web-join:v0.1
         ports:
         - containerPort: 80
         livenessProbe:

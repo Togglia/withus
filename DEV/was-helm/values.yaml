@@ -12,9 +12,9 @@ hpa:
 
 apps:
   - name: was-intro
-    imageTag: v0.1
+    imageTag: v3.0
   - name: was-join
-    imageTag: v0.1
+    imageTag: v3.0
   - name: was-login
     imageTag: v0.1
   - name: was-home

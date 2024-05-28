@@ -34,9 +34,6 @@ spec:
       containers:
         - name: {{ .name }}
           image: {{ $.Values.image.repository }}/{{ .name }}:{{ .imageTag }}
-          volumeMounts:
-          - name: persistent-storage
-            mountPath: /data
           ports:
           - containerPort: 80
           livenessProbe:
@@ -59,11 +56,6 @@ spec:
             limits:
               memory: {{ $.Values.resources.limits.memory }}
               cpu: {{ $.Values.resources.limits.cpu }}
-      volumes:
-      - name: persistent-storage
-        nfs:
-          server: fs-0c1c8133661fbf071.efs.ap-northeast-2.amazonaws.com
-          path: /
     strategy:
       type: RollingUpdate
       rollingUpdate:

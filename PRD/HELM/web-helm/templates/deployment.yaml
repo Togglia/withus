@@ -40,17 +40,17 @@ spec:
         - name: {{ .name }}
           image: {{ $.Values.image.repository }}/{{ .name }}:{{ .imageTag }}
           ports:
-          - containerPort: 8080  # 포트를 8080으로 수정
+          - containerPort: 80  # 포트를 80으로 수정
           livenessProbe:
             httpGet:
               path: /
-              port: 8080  # 포트를 8080으로 유지
+              port: 80  # 포트를 80으로 수정
             initialDelaySeconds: 15
             periodSeconds: 10
             timeoutSeconds: 30
           readinessProbe:
             tcpSocket:
-              port: 8080  # 포트를 8080으로 유지
+              port: 80  # 포트를 80으로 수정
             initialDelaySeconds: 15
             periodSeconds: 10
             timeoutSeconds: 30

@@ -60,10 +60,10 @@ spec:
               memory: {{ $.Values.resources.limits.memory }}
               cpu: {{ $.Values.resources.limits.cpu }}
       volumes:
-     - name: persistent-storage
-       nfs:
-         server: fs-0c1c8133661fbf071.efs.ap-northeast-2.amazonaws.com
-         path: /
+      - name: persistent-storage
+        nfs:
+          server: fs-0c1c8133661fbf071.efs.ap-northeast-2.amazonaws.com
+          path: /
     strategy:
       type: RollingUpdate
       rollingUpdate:

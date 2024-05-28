@@ -36,11 +36,6 @@ spec:
           image: {{ $.Values.image.repository }}/{{ .name }}:{{ .imageTag }}
           ports:
           - containerPort: 80
-          command: ["/bin/sh"]
-          args: ["-c", "while true; do echo $(date -u) >> /data/out1.txt; sleep 5; done"]     
-          volumeMounts:
-          - name: persistent-storage
-            mountPath: /data
           livenessProbe:
             httpGet:
               path: /
@@ -61,10 +56,6 @@ spec:
             limits:
               memory: {{ $.Values.resources.limits.memory }}
               cpu: {{ $.Values.resources.limits.cpu }}
-      volumes:
-      - name: persistent-storage
-        persistentVolumeClaim:
-          claimName: efs-claim
   strategy:
     type: RollingUpdate
     rollingUpdate:

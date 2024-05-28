@@ -55,11 +55,11 @@ spec:
               cpu: {{ $.Values.resources.requests.cpu }}
             limits:
               memory: {{ $.Values.resources.limits.memory }}
-              cpu: {{ $.Values.resources.limits.cpu }}m
-    strategy:
-      type: RollingUpdate
-      rollingUpdate:
-        maxSurge: 25%
-        maxUnavailable: 25%
+              cpu: {{ $.Values.resources.limits.cpu }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
 ---
 {{- end }}

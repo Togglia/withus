@@ -30,4 +30,4 @@ apps:
   - name: web-login
     imageTag: v0.1
   - name: web-home
-    imageTag: v0.1
+    imageTag: v2.1

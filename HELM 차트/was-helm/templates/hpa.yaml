@@ -4,7 +4,6 @@ apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler
 metadata:
   name: hpa-{{ .name }}
-  namespace: was
 spec:
   maxReplicas: {{ $.Values.hpa.maxReplicas }}
   minReplicas: {{ $.Values.hpa.minReplicas }}

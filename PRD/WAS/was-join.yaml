@@ -37,7 +37,7 @@ spec:
             app: was-join
       containers:
       - name: was-join
-        image: 891377152236.dkr.ecr.ap-northeast-2.amazonaws.com/was-join:v3.0
+        image: 891377152236.dkr.ecr.ap-northeast-2.amazonaws.com/was-join:v0.1
         ports:
         - containerPort: 8080
 ---

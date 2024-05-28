@@ -37,7 +37,7 @@ spec:
             app: was-intro
       containers:
       - name: was-intro
-        image: 891377152236.dkr.ecr.ap-northeast-2.amazonaws.com/was-intro:v0.1
+        image: 891377152236.dkr.ecr.ap-northeast-2.amazonaws.com/was-intro:v3.0
         ports:
         - containerPort: 8080
         livenessProbe:
@@ -48,7 +48,7 @@ spec:
           tcpSocket:
             port: 8080
           initialDelaySeconds: 15
-          periodSeconds: 10
+          periodSeconds: 10   
 ---
 apiVersion: v1
 kind: Service
@@ -62,6 +62,7 @@ spec:
     port: 8080
     targetPort: 8080
   type: ClusterIP
+  clusterIP: 172.20.30.10
 ---
 apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler

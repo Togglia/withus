@@ -1,4 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="java.sql.*" %>
+<%@ page import="javax.servlet.http.*, java.io.*, redis.clients.jedis.*" %>
+<%@ page import="redis.clients.jedis.exceptions.JedisConnectionException" %>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -125,54 +129,60 @@
 </head>
 <body>
     <% 
-            String RsessionId = request.getRequestedSessionId();
-            String compareSessionId = session.getId();
-            String sessionId = request.getParameter("sessionId");
-            String userId = request.getParameter("userId");
-    
-            // Check if userId is null or sessionId is "temp"
-            if (userId == null || sessionId == null) {
+        String RsessionId = request.getRequestedSessionId();
+        String compareSessionId = session.getId();
+        String sessionId = request.getParameter("sessionId");
+        String userId = request.getParameter("userId");
+
+        Jedis jedis = new Jedis("redis-test.3r7xgx.ng.0001.apn2.cache.amazonaws.com", 6379); // Redis 서버 주소와 포트
+        String redisSessionId = null;
+
+        if (userId != null && !userId.equals("null")) {
+            // Redis에서 sessionId 가져오기
+            redisSessionId = jedis.get(userId);
+        }
+        if (userId == null || userId.equals("null")) {
             %>
             out.println("null");
             <% 
-            } else {
-                // Check if sessionId matches
-                if (sessionId != null && (sessionId.equals(RsessionId) || compareSessionId.equals(RsessionId))) {
+        } else {
+            if (!userId.equals("null") && redisSessionId != null) {
             %>
-                    <div class="user-info">Welcome, <%= userId %>! <a href="https://www.withus.site/">Logout</a></div>
-                        
-                <% 
-                } else {
-                // If sessionId doesn't match
-                %>
-                out.println("mismatch");
-                <% 
-                }
-            } 
-        %>
+            <div class="user-info">Welcome, <%= userId %>! <a href="https://www.withus.site/">Logout</a></div>
+
+        <% 
+        }else {
+            %>
+            out.println("mismatch");
+
+            <% 
+            }
+        } 
+    %>
+
     
     <h1>Travel Categories</h1>
     <ul>
-        <div class="category" style="background-color: #FFB6C1;"><li><a href="https://www.withus.shop/home/index.jsp?category=중국&userId=<%= userId %>&sessionId=<%= compareSessionId %>">중국</a></li></div>
-        <div class="category" style="background-color: #FFB6C1;"><li><a href="https://www.withus.shop/home/index.jsp?category=일본&userId=<%= userId %>&sessionId=<%= compareSessionId %>">일본</a></li></div>
-        <div class="category" style="background-color: #ADD8E6;"><li><a href="https://www.withus.shop/home/index.jsp?category=튀르키예&userId=<%= userId %>&sessionId=<%= compareSessionId %>">튀르키예</a></li></div>
-        <div class="category" style="background-color: #ADD8E6;"><li><a href="https://www.withus.shop/home/index.jsp?category=영국&userId=<%= userId %>&sessionId=<%= compareSessionId %>">영국</a></li></div>
-        <div class="category" style="background-color: #FFB6C1;"><li><a href="https://www.withus.shop/home/index.jsp?category=괌&userId=<%= userId %>&sessionId=<%= compareSessionId %>">괌</a></li></div>
-        <div class="category" style="background-color: #FFB6C1;"><li><a href="https://www.withus.shop/home/index.jsp?category=태국&userId=<%= userId %>&sessionId=<%= compareSessionId %>">태국</a></li></div>
-        <div class="category" style="background-color: #FFB6C1;"><li><a href="https://www.withus.shop/home/index.jsp?category=베트남&userId=<%= userId %>&sessionId=<%= compareSessionId %>">베트남</a></li></div>
-        <div class="category" style="background-color: #ADD8E6;"><li><a href="https://www.withus.shop/home/index.jsp?category=스위스&userId=<%= userId %>&sessionId=<%= compareSessionId %>">스위스</a></li></div>
-        <div class="category" style="background-color: #ADD8E6;"><li><a href="https://www.withus.shop/home/index.jsp?category=이탈리아&userId=<%= userId %>&sessionId=<%= compareSessionId %>">이탈리아</a></li></div>
-        <div class="category" style="background-color: #FFB6C1;"><li><a href="https://www.withus.shop/home/index.jsp?category=사이판&userId=<%= userId %>&sessionId=<%= compareSessionId %>">사이판</a></li></div>
-        <div class="category" style="background-color: #FFB6C1;"><li><a href="https://www.withus.shop/home/index.jsp?category=인도네시아&userId=<%= userId %>&sessionId=<%= compareSessionId %>">인도네시아</a></li></div>
-        <div class="category" style="background-color: #FFB6C1;"><li><a href="https://www.withus.shop/home/index.jsp?category=싱가포르&userId=<%= userId %>&sessionId=<%= compareSessionId %>">싱가포르</a></li></div>
-        <div class="category" style="background-color: #ADD8E6;"><li><a href="https://www.withus.shop/home/index.jsp?category=프랑스&userId=<%= userId %>&sessionId=<%= compareSessionId %>">프랑스</a></li></div>
-        <div class="category" style="background-color: #ADD8E6;"><li><a href="https://www.withus.shop/home/index.jsp?category=독일&userId=<%= userId %>&sessionId=<%= compareSessionId %>">독일</a></li></div>
-        <div class="category" style="background-color: #FFB6C1;"><li><a href="https://www.withus.shop/home/index.jsp?category=호주&userId=<%= userId %>&sessionId=<%= compareSessionId %>">호주</a></li></div>
-        <div class="category" style="background-color: #FFB6C1;"><li><a href="https://www.withus.shop/home/index.jsp?category=몰디브&userId=<%= userId %>&sessionId=<%= compareSessionId %>">몰디브</a></li></div>
-        <div class="category" style="background-color: #FFB6C1;"><li><a href="https://www.withus.shop/home/index.jsp?category=대만&userId=<%= userId %>&sessionId=<%= compareSessionId %>">대만</a></li></div>
-        <div class="category" style="background-color: #ADD8E6;"><li><a href="https://www.withus.shop/home/index.jsp?category=체코&userId=<%= userId %>&sessionId=<%= compareSessionId %>">체코</a></li></div>
-        <div class="category" style="background-color: #ADD8E6;"><li><a href="https://www.withus.shop/home/index.jsp?category=북유럽&userId=<%= userId %>&sessionId=<%= compareSessionId %>">북유럽</a></li></div>
-        <div class="category" style="background-color: #FFB6C1;"><li><a href="https://www.withus.shop/home/index.jsp?category=미국캐나다&userId=<%= userId %>&sessionId=<%= compareSessionId %>">미국캐나다</a></li></div>
+        <div class="category" style="background-color: #FFB6C1;"><li><a href="https://www.withus.site/home/index.jsp?category=중국&userId=<%= userId %>">중국</a></li></div>
+        <div class="category" style="background-color: #FFB6C1;"><li><a href="https://www.withus.site/home/index.jsp?category=일본&userId=<%= userId %>">일본</a></li></div>
+        <div class="category" style="background-color: #ADD8E6;"><li><a href="https://www.withus.site/home/index.jsp?category=튀르키예&userId=<%= userId %>">튀르키예</a></li></div>
+        <div class="category" style="background-color: #ADD8E6;"><li><a href="https://www.withus.site/home/index.jsp?category=영국&userId=<%= userId %>">영국</a></li></div>
+        <div class="category" style="background-color: #FFB6C1;"><li><a href="https://www.withus.site/home/index.jsp?category=괌&userId=<%= userId %>">괌</a></li></div>
+        <div class="category" style="background-color: #FFB6C1;"><li><a href="https://www.withus.site/home/index.jsp?category=태국&userId=<%= userId %>">태국</a></li></div>
+        <div class="category" style="background-color: #FFB6C1;"><li><a href="https://www.withus.site/home/index.jsp?category=베트남&userId=<%= userId %>">베트남</a></li></div>
+        <div class="category" style="background-color: #ADD8E6;"><li><a href="https://www.withus.site/home/index.jsp?category=스위스&userId=<%= userId %>">스위스</a></li></div>
+        <div class="category" style="background-color: #ADD8E6;"><li><a href="https://www.withus.site/home/index.jsp?category=이탈리아&userId=<%= userId %>">이탈리아</a></li></div>
+        <div class="category" style="background-color: #FFB6C1;"><li><a href="https://www.withus.site/home/index.jsp?category=사이판&userId=<%= userId %>">사이판</a></li></div>
+        <div class="category" style="background-color: #FFB6C1;"><li><a href="https://www.withus.site/home/index.jsp?category=인도네시아&userId=<%= userId %>">인도네시아</a></li></div>
+        <div class="category" style="background-color: #FFB6C1;"><li><a href="https://www.withus.site/home/index.jsp?category=싱가포르&userId=<%= userId %>">싱가포르</a></li></div>
+        <div class="category" style="background-color: #ADD8E6;"><li><a href="https://www.withus.site/home/index.jsp?category=프랑스&userId=<%= userId %>">프랑스</a></li></div>
+        <div class="category" style="background-color: #ADD8E6;"><li><a href="https://www.withus.site/home/index.jsp?category=독일&userId=<%= userId %>">독일</a></li></div>
+        <div class="category" style="background-color: #FFB6C1;"><li><a href="https://www.withus.site/home/index.jsp?category=호주&userId=<%= userId %>">호주</a></li></div>
+        <div class="category" style="background-color: #FFB6C1;"><li><a href="https://www.withus.site/home/index.jsp?category=몰디브&userId=<%= userId %>">몰디브</a></li></div>
+        <div class="category" style="background-color: #FFB6C1;"><li><a href="https://www.withus.site/home/index.jsp?category=대만&userId=<%= userId %>">대만</a></li></div>
+        <div class="category" style="background-color: #ADD8E6;"><li><a href="https://www.withus.site/home/index.jsp?category=체코&userId=<%= userId %>">체코</a></li></div>
+        <div class="category" style="background-color: #ADD8E6;"><li><a href="https://www.withus.site/home/index.jsp?category=북유럽&userId=<%= userId %>">북유럽</a></li></div>
+        <div class="category" style="background-color: #FFB6C1;"><li><a href="https://www.withus.site/home/index.jsp?category=미국캐나다&userId=<%= userId %>">미국캐나다</a></li></div>
     </ul>
 
     <%-- Check if category parameter is present in URL --%>

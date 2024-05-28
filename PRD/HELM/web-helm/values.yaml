@@ -1,4 +1,4 @@
-replicaCount: 2
+replicaCount: 1
 
 image:
   repository: 891377152236.dkr.ecr.ap-northeast-2.amazonaws.com 
@@ -18,7 +18,7 @@ service:
 
 hpa:
   enabled: true
-  minReplicas: 2
+  minReplicas: 1
   maxReplicas: 10
   targetCPUUtilizationPercentage: 50
 

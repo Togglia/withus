@@ -37,7 +37,7 @@ spec:
             app: was-login
       containers:
       - name: was-login
-        image: 891377152236.dkr.ecr.ap-northeast-2.amazonaws.com/was-login:v3.2
+        image: 891377152236.dkr.ecr.ap-northeast-2.amazonaws.com/was-login:v3.3
         ports:
         - containerPort: 8080
 ---

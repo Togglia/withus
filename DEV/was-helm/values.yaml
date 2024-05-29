@@ -25,3 +25,14 @@ service:
   - 172.20.30.30
   - 172.20.30.40
   - 172.20.30.20
+
+enablePersistentVolume: true
+
+nfs:
+  server: fs-0b28aaa18b9db0a18.efs.ap-northeast-2.amazonaws.com
+  path: /
+
+persistentStorage:
+  enabled: true
+  mountPath: /data
+  pvcName: efs-claim

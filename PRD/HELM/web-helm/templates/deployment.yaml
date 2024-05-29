@@ -10,11 +10,6 @@ spec:
   selector:
     matchLabels:
       app: {{ .name }}
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxSurge: 25%
-      maxUnavailable: 25%
   template:
     metadata:
       labels:
@@ -40,26 +35,32 @@ spec:
         - name: {{ .name }}
           image: {{ $.Values.image.repository }}/{{ .name }}:{{ .imageTag }}
           ports:
-          - containerPort: 80  
-          livenessProbe:
-            httpGet:
-              path: /
-              port: 80  
-            initialDelaySeconds: 15
-            periodSeconds: 10
-            timeoutSeconds: 60
-          readinessProbe:
-            tcpSocket:
-              port: 80  
-            initialDelaySeconds: 15
-            periodSeconds: 10
-            timeoutSeconds: 30
+          - containerPort: 80
           resources:
             requests:
               memory: 50Mi  
               cpu: 100m
             limits:
               memory: 50Mi  
-              cpu: 100m
+              cpu: 100m  
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80  
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            timeoutSeconds: 5
+          readinessProbe:
+            tcpSocket:
+              port: 80  
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            timeoutSeconds: 5
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+
 ---
 {{- end }}

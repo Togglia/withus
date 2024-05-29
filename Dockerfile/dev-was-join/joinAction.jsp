@@ -33,7 +33,7 @@
             pstmt.setString(4, userGender);
             pstmt.setString(5, userEmail);
             pstmt.executeUpdate();
-                response.sendRedirect("https://www.withus.site/login/");
+                response.sendRedirect("https://dev.withus.site/login/");
         } catch (ClassNotFoundException e) {
             out.println("JDBC Driver not found: " + e.getMessage());
         } catch (SQLException e) {

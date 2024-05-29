@@ -51,12 +51,12 @@ spec:
           initialDelaySeconds: 15
           periodSeconds: 10
         volumeMounts:
-        - name: persistent-storage
-          mountPath: {{ $.Values.persistentStorage.mountPath }}
+          - name: persistent-storage
+            mountPath: {{ $.Values.persistentStorage.mountPath }}
       volumes:
-      - name: persistent-storage
-        nfs:
-          server: {{ $.Values.nfs.server }}
-          path: {{ $.Values.nfs.path }}
+        - name: persistent-storage
+          nfs:
+            server: {{ $.Values.nfs.server }}
+            path: {{ $.Values.nfs.path }}
 ---
 {{- end }}

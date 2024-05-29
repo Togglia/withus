@@ -12,6 +12,12 @@ resources:
     memory: 250Mi
     cpu: 250m
 
+service:
+  - 172.20.30.10
+  - 172.20.30.20
+  - 172.20.30.30
+  - 172.20.30.40
+
 hpa:
   enabled: true
   minReplicas: 1
@@ -27,9 +33,3 @@ apps:
     imageTag: v0.1
   - name: was-login
     imageTag: v0.1
-
-service:
-  - 172.20.30.10
-  - 172.20.30.20
-  - 172.20.30.30
-  - 172.20.30.40

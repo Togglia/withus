@@ -15,7 +15,7 @@ jobs:
 
     strategy:
       matrix:
-        repo_name: [web-intro, web-home, web-join, web-login, was-intro, was-home, was-join, was-login]
+        repo_name: [web-intro, web-home, web-join, web-login, was-intro, was-home, was-join, was-login, dev-was-intro, dev-was-home, dev-was-join, dev-was-login ]
 
     steps:
       - name: Checkout

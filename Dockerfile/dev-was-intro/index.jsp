@@ -176,8 +176,8 @@
         <h2>우리 여행 어디로 갈까?</h2>
 
         <div class="to-home">
-        <a href="https://www.withus.site/login/">Login</a>
-        <a href="https://www.withus.site/join/">Join</a>
+        <a href="https://dev.withus.site/login/">Login</a>
+        <a href="https://dev.withus.site/join/">Join</a>
     </div>
 
     <h2 class="explanation">How it works</h2>

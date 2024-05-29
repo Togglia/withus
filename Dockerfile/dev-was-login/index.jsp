@@ -103,7 +103,7 @@ margin: auto;
             <input type="submit" value="Login">
         </form>              
          
-        <a href="https://www.withus.site/join/" class="join-btn">Join</a>
+        <a href="https://dev.withus.site/join/" class="join-btn">Join</a>
     </div>                 
 </body>                        
 </html>

@@ -35,7 +35,7 @@ apps:
 enablePersistentVolume: true
 
 nfs:
-  server: fs-0c1c8133661fbf071.efs.ap-northeast-2.amazonaws.com
+  server: fs-0b28aaa18b9db0a18.efs.ap-northeast-2.amazonaws.com
   path: /
 
 persistentStorage:

@@ -50,5 +50,13 @@ spec:
             port: 8080
           initialDelaySeconds: 15
           periodSeconds: 10
+        volumeMounts:
+        - name: persistent-storage
+          mountPath: {{ $.Values.persistentStorage.mountPath }}
+      volumes:
+      - name: persistent-storage
+        nfs:
+          server: {{ $.Values.nfs.server }}
+          path: {{ $.Values.nfs.path }}
 ---
 {{- end }}

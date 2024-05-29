@@ -9,7 +9,7 @@
     <script>
         function showPopup() {
             alert("존재하지 않는 ID입니다. 다시 시도해주세요.");
-            window.location.href = "https://deb.withus.site/login/"; // login.jsp 페이지로 이동
+            window.location.href = "https://dev.withus.site/login/"; // login.jsp 페이지로 이동
         }
         
     </script>
@@ -54,7 +54,7 @@
                     e.printStackTrace();
                 }
 
-                response.sendRedirect("https://deb.withus.site/home?userId=" + userID);
+                response.sendRedirect("https://dev.withus.site/home?userId=" + userID);
             } else {
                 out.println("<script>showPopup();</script>");
             }

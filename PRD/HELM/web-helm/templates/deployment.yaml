@@ -38,11 +38,11 @@ spec:
           - containerPort: 80
           resources:
             requests:
-              memory: {{ .Values.resources.requests.memory }}  
-              cpu: {{ .Values.resources.requests.cpu }}
+              memory: 50Mi  
+              cpu: 100m
             limits:
-              memory: {{ .Values.resources.limits.memory }}  
-              cpu: {{ .Values.resources.limits.cpu }}  
+              memory: 50Mi   
+              cpu: 100m  
           livenessProbe:
             httpGet:
               path: /

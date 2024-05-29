@@ -1,35 +1,32 @@
-FROM alpine:latest as builder
-  
-RUN apk update && \
-apk add --no-cache openjdk8
+FROM tomcat:9.0
 
+RUN apt-get update && apt-get install -y wget unzip
+
+# 환경 변수 설정
 ENV JAVA_HOME /usr/lib/jvm/java-1.8-openjdk
-ENV CATALINA_HOME /usr/local/tomcat9.0
+ENV CATALINA_HOME /usr/local/tomcat
 ENV TOMCAT_VERSION 9.0.89
 
-RUN wget https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.89/bin/apache-tomcat-9.0.89.tar.gz && \
-mkdir -p $CATALINA_HOME && \
-tar -xvf apache-tomcat-9.0.89.tar.gz -C $CATALINA_HOME --strip-components=1 && \
-rm apache-tomcat-9.0.89.tar.gz && \
-wget https://dlm.mariadb.com/3752081/Connectors/java/connector-java-3.3.3/mariadb-java-client-3.3.3.jar && \
-mv mariadb-java-client-3.3.3.jar $CATALINA_HOME/lib/ && \
-rm -rf $CATALINA_HOME/webapps/* && \
-mkdir -p $CATALINA_HOME/webapps/ROOT
+# MariaDB Connector 다운로드 및 설치
+RUN wget https://dlm.mariadb.com/3752081/Connectors/java/connector-java-3.3.3/mariadb-java-client-3.3.3.jar && \
+    mv mariadb-java-client-3.3.3.jar $CATALINA_HOME/lib/
 
-COPY ./index.jsp $CATALINA_HOME/webapps/ROOT/
+# 불필요한 웹 애플리케이션 제거 및 ROOT 디렉토리 생성
+RUN rm -rf $CATALINA_HOME/webapps/* && \
+    mkdir -p $CATALINA_HOME/webapps/ROOT
 
-FROM alpine:latest
+# Redis Session Manager 다운로드 및 설치
+RUN wget https://github.com/ran-jit/tomcat-cluster-redis-session-manager/releases/download/2.0.4/tomcat-cluster-redis-session-manager.zip && \
+    unzip tomcat-cluster-redis-session-manager.zip -d $CATALINA_HOME && \
+    mv $CATALINA_HOME/tomcat-cluster-redis-session-manager/lib/* $CATALINA_HOME/lib/ && \
+    mv $CATALINA_HOME/tomcat-cluster-redis-session-manager/conf/* $CATALINA_HOME/conf/ && \
+    rm tomcat-cluster-redis-session-manager.zip
 
-RUN apk add --no-cache openjdk8-jre-base && \
-rm -rf /var/cache/apk/*
+# 사용자 설정 파일 복사
+COPY index.jsp $CATALINA_HOME/webapps/ROOT/
 
-ENV JAVA_HOME /usr/lib/jvm/java-1.8-openjdk
-ENV CATALINA_HOME /usr/local/tomcat9.0
-ENV PATH $JAVA_HOME/bin:$CATALINA_HOME/bin:$PATH
-ENV CLASSPATH .:$JAVA_HOME/jre/lib/ext:$JAVA_HOME/lib/tools.jar:$CATALINA_HOME/lib/jsp-api.jar:$CATALINA_HOME/lib/servlet-api.jar:$JAVA_HOME/lib/mariadb-java-client-3.3.3.jar:$CATALINA_HOME/lib/mariadb-java-client-3.3.3.jar
-
-COPY --from=builder $CATALINA_HOME $CATALINA_HOME
-
+# 포트 노출
 EXPOSE 8080
 
+# Tomcat 실행
 CMD ["catalina.sh", "run"]

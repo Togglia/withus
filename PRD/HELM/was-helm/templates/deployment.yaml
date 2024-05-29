@@ -56,10 +56,10 @@ spec:
           timeoutSeconds: 5
         resources:
           requests:
-            memory: {{ .Values.resources.requests.memory }}
-            cpu: {{ .Values.resources.requests.cpu }}
+            memory: 250Mi
+            cpu: 250m
           limits:
-            memory: {{ .Values.resources.limits.memory }}
-            cpu: {{ .Values.resources.limits.cpu }}
+            memory: 250Mi
+            cpu: 250m
 ---
 {{- end }}

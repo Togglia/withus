@@ -56,14 +56,6 @@ spec:
             initialDelaySeconds: 15
             periodSeconds: 10
             timeoutSeconds: 5
-          volumeMounts:
-            - name: persistent-storage
-              mountPath: {{ $.Values.persistentStorage.mountPath }}
-      volumes:
-        - name: persistent-storage
-          nfs:
-            server: {{ $.Values.nfs.server }}
-            path: {{ $.Values.nfs.path }}
   strategy:
     type: RollingUpdate
     rollingUpdate:

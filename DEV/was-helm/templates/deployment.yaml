@@ -45,11 +45,22 @@ spec:
           httpGet:
             path: /
             port: 8080
+          initialDelaySeconds: 15
+          periodSeconds: 10
+          timeoutSeconds: 30
         readinessProbe:
           tcpSocket:
             port: 8080
           initialDelaySeconds: 15
           periodSeconds: 10
+          timeoutSeconds: 5
+        resources:
+          requests:
+            memory: {{ $.Values.resources.requests.memory }}
+            cpu: {{ $.Values.resources.requests.cpu }}
+          limits:
+            memory: {{ $.Values.resources.limits.memory }} 
+            cpu: {{ $.Values.resources.limits.cpu }}
         volumeMounts:
           - name: persistent-storage
             mountPath: {{ $.Values.persistentStorage.mountPath }}

@@ -28,7 +28,7 @@ apps:
   - name: was-intro
     imageTag: v1.0
   - name: was-home
-    imageTag: v1.0
+    imageTag: v1.1
   - name: was-join
     imageTag: v1.0
   - name: was-login

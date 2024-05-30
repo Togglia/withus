@@ -38,24 +38,37 @@ spec:
           - containerPort: 80
           resources:
             requests:
-              memory: {{ $.Values.resources.requests.memory }}
+              memory: {{ $.Values.resources.requests.memory }}  
               cpu: {{ $.Values.resources.requests.cpu }}
             limits:
-              memory: {{ $.Values.resources.limits.memory }}
-              cpu: {{ $.Values.resources.limits.cpu }}
+              memory: {{ $.Values.resources.limits.memory }}    
+              cpu: {{ $.Values.resources.limits.cpu }}  
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80  
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            timeoutSeconds: 5
+          readinessProbe:
+            tcpSocket:
+              port: 80  
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            timeoutSeconds: 5
           volumeMounts:
-          - name: persistent-storage
-            mountPath: {{ $.Values.persistentStorage.mountPath }}
+            - name: persistent-storage
+              mountPath: {{ $.Values.persistentStorage.mountPath }}
       volumes:
         - name: persistent-storage
           nfs:
             server: {{ $.Values.nfs.server }}
             path: {{ $.Values.nfs.path }}
-    strategy:
-      type: RollingUpdate
-      rollingUpdate:
-        maxSurge: 25%
-        maxUnavailable: 25%
- 
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+
 ---
 {{- end }}

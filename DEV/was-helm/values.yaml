@@ -33,3 +33,14 @@ apps:
     imageTag: v1.0
   - name: was-login
     imageTag: v0.1
+
+enablePersistentVolume: true
+
+nfs:
+   server: fs-0b28aaa18b9db0a18.efs.ap-northeast-2.amazonaws.com
+   path: /
+
+persistentStorage:
+   enabled: true
+   mountPath: /data
+   pvcName: efs-claim

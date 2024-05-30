@@ -32,4 +32,4 @@ apps:
   - name: was-join
     imageTag: v1.0
   - name: was-login
-    imageTag: v1.0
+    imageTag: v0.1

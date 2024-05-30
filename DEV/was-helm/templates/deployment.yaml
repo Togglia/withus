@@ -61,13 +61,5 @@ spec:
           limits:
             memory: {{ $.Values.resources.limits.memory }} 
             cpu: {{ $.Values.resources.limits.cpu }}
-        volumeMounts:
-          - name: persistent-storage
-            mountPath: {{ $.Values.persistentStorage.mountPath }}
-      volumes:
-        - name: persistent-storage
-          nfs:
-            server: {{ $.Values.nfs.server }}
-            path: {{ $.Values.nfs.path }}
 ---
 {{- end }}

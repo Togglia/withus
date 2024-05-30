@@ -6,10 +6,10 @@ image:
 
 resources:
   requests:
-    memory: 200Mi
+    memory: 50Mi
     cpu: 100m
   limits:
-    memory: 200Mi
+    memory: 50Mi
     cpu: 100m
 
 service:
@@ -31,14 +31,3 @@ apps:
     imageTag: v0.1
   - name: web-home
     imageTag: v0.3
-
-enablePersistentVolume: true
-
-nfs:
-  server: fs-0b28aaa18b9db0a18.efs.ap-northeast-2.amazonaws.com
-  path: /
-
-persistentStorage:
-  enabled: true
-  mountPath: /data
-  pvcName: efs-claim

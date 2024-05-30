@@ -25,13 +25,13 @@ hpa:
   targetCPUUtilizationPercentage: 50
 
 apps:
-  - name: was-intro
+  - name: dev-was-intro
     imageTag: v1.0
-  - name: was-home
+  - name: dev-was-home
     imageTag: v1.1
-  - name: was-join
+  - name: dev-was-join
     imageTag: v1.0
-  - name: was-login
+  - name: dev-was-login
     imageTag: v0.1
 
 enablePersistentVolume: true

@@ -1,4 +1,4 @@
-name: Dockerizing to Amazon ECR
+name: Dockerizing to Amazon ECR and Deploying Helm Chart
 
 on:
   push:
@@ -15,7 +15,7 @@ jobs:
 
     strategy:
       matrix:
-        repo_name: [web-intro, web-home, web-join, web-login, was-intro, was-home, was-join, was-login, dev-was-intro, dev-was-home, dev-was-join, dev-was-login ]
+        repo_name: [web-intro, web-home, web-join, web-login, was-intro, was-home, was-join, was-login, dev-was-intro, dev-was-home, dev-was-join, dev-was-login]
 
     steps:
       - name: Checkout
@@ -53,7 +53,6 @@ jobs:
             exit 0
           fi
 
-
       - name: Build, tag, and push image to Amazon ECR
         id: build-image
         if: steps.compare-versions.outputs.changed == 'true'  
@@ -65,3 +64,24 @@ jobs:
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f Dockerfile/${{ matrix.repo_name }}/Dockerfile Dockerfile/${{ matrix.repo_name }}
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+
+      - name: Update imageTag in values.yaml
+        id: update-values
+        run: |
+          sed -i "s/imageTag: v0.1/imageTag: ${{ steps.get-version.outputs.version }}/g" PRD/HELM/web-helm/values.yaml
+
+      - name: Commit changes
+        run: |
+          git config --global user.email "actions@github.com"
+          git config --global user.name "GitHub Actions"
+          git add PRD/HELM/web-helm/values.yaml
+          git commit -m "Update imageTag in values.yaml"
+          git push
+
+      - name: Deploy Helm Chart
+        uses: Azure/helm-kubectl@v2
+        with:
+          command: upgrade
+          arguments: web-helm PRD/HELM/web-helm
+          values: PRD/HELM/web-helm/values.yaml
+          namespace: default

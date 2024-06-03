@@ -82,6 +82,8 @@ jobs:
 
       - name: Commit and push changes
         if: steps.compare-versions.outputs.changed == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
         run: |
           git config --global user.name 'Togglia'
           git config --global user.email 'hsoo0720@naver.com'

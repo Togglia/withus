@@ -56,7 +56,7 @@ jobs:
       - name: Update values.yaml
         if: steps.compare-versions.outputs.changed == 'true'
         run: |
-          sed -i 's|v0.1|${{ steps.get-version.outputs.version }}|g' PRD/HELM/web-helm/values.yaml
+          sed -i 's|imageTag: v0.1|imageTag:${{ steps.get-version.outputs.version }}|g' PRD/HELM/web-helm/values.yaml
           sed -i 's|imageTag: v1.1|imageTag:${{ steps.get-version.outputs.version }}|g' PRD/HELM/was-helm/values.yaml
           
 

@@ -82,11 +82,10 @@ jobs:
 
       - name: Commit and push changes
         if: steps.compare-versions.outputs.changed == 'true'
-        env:
-          GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
         run: |
           git config --global user.name 'Togglia'
           git config --global user.email 'hsoo0720@naver.com'
+          git remote set-url origin https://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@github.com/Togglia/withus.git
           git add PRD/HELM/**/values.yaml
           git commit -m "Update image tag for ${{ matrix.repo_name }} to ${{ steps.get-version.outputs.version }}"
           git push

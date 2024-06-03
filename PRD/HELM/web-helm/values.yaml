@@ -24,7 +24,7 @@ hpa:
 
 apps:
   - name: web-intro
-    imageTag: v0.1
+    imageTag: {{ imageTag }}
   - name: web-join
     imageTag: v0.1
   - name: web-login

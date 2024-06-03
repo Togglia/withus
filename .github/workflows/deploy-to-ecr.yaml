@@ -15,16 +15,21 @@ jobs:
 
     strategy:
       matrix:
-        repo_name: [web-intro, web-home, web-join, web-login, was-intro, was-home, was-join, was-login, dev-was-intro, dev-was-home, dev-was-join, dev-was-login ]
+        repo_name: [web-intro, web-home, web-join, web-login, was-intro, was-home, was-join, was-login, dev-was-intro, dev-was-home, dev-was-join, dev-was-login]
 
     steps:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Install yq
+        run: |
+          sudo wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq
+          sudo chmod +x /usr/bin/yq
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}          
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-northeast-2
 
@@ -53,10 +58,9 @@ jobs:
             exit 0
           fi
 
-
       - name: Build, tag, and push image to Amazon ECR
         id: build-image
-        if: steps.compare-versions.outputs.changed == 'true'  
+        if: steps.compare-versions.outputs.changed == 'true'
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: ${{ matrix.repo_name }}
@@ -65,3 +69,22 @@ jobs:
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f Dockerfile/${{ matrix.repo_name }}/Dockerfile Dockerfile/${{ matrix.repo_name }}
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+
+      - name: Update Helm values.yaml for web repositories
+        if: steps.compare-versions.outputs.changed == 'true' && startsWith(matrix.repo_name, 'web-')
+        run: |
+          yq e '.image.tag = "${{ steps.get-version.outputs.version }}"' -i PRD/HELM/web-helm/values.yaml
+
+      - name: Update Helm values.yaml for was repositories
+        if: steps.compare-versions.outputs.changed == 'true' && startsWith(matrix.repo_name, 'was-')
+        run: |
+          yq e '.image.tag = "${{ steps.get-version.outputs.version }}"' -i PRD/HELM/was-helm/values.yaml
+
+      - name: Commit and push changes
+        if: steps.compare-versions.outputs.changed == 'true'
+        run: |
+          git config --global user.name 'Togglia'
+          git config --global user.email 'hsoo0720@naver.com'
+          git add PRD/HELM/**/values.yaml
+          git commit -m "Update image tag for ${{ matrix.repo_name }} to ${{ steps.get-version.outputs.version }}"
+          git push

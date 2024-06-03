@@ -173,7 +173,7 @@
 
     <div class="box1">
         <span>AWS를 활용한 Docker, Kubernetes Project</span>
-        <h2>우리 여행 어디로 갈까?</h2>
+        <h2>test?</h2>
 
         <div class="to-home">
         <a href="https://www.withus.site/login/">Login</a>

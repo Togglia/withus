@@ -34,7 +34,20 @@ spec:
       - name: web-intro
         image: 891377152236.dkr.ecr.ap-northeast-2.amazonaws.com/web-intro:v0.1
         ports:
-        - containerPort: 80        
+        - containerPort: 80
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80  
+          initialDelaySeconds: 15
+          periodSeconds: 10
+          timeoutSeconds: 5
+        readinessProbe:
+          tcpSocket:
+            port: 80  
+          initialDelaySeconds: 15
+          periodSeconds: 10
+          timeoutSeconds: 5
         resources:
           requests:
             memory: 50Mi
